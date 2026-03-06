@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cosmología con CLASS | Esteban González</title>
+    <link rel="stylesheet" href="../../css/styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        /* Mismos estilos que en el proyecto anterior */
+        .project-header {
+            background: linear-gradient(135deg, var(--gradient-start), var(--gradient-end));
+            padding: 120px 0 60px;
+            text-align: center;
+        }
+        .project-header h1 {
+            font-size: 2.8rem;
+            margin-bottom: 1rem;
+        }
+        .project-header .project-subtitle {
+            color: var(--text-secondary);
+            font-size: 1.3rem;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        .project-content {
+            padding: 60px 0;
+            background: var(--bg-primary);
+        }
+        .project-section {
+            background: var(--bg-secondary);
+            padding: 40px;
+            border-radius: 20px;
+            margin-bottom: 40px;
+            border: 1px solid rgba(77, 163, 255, 0.1);
+        }
+        .project-section h2 {
+            color: var(--accent-primary);
+            margin-bottom: 20px;
+            font-size: 2rem;
+        }
+        .project-section h3 {
+            color: var(--text-primary);
+            margin: 20px 0 10px;
+        }
+        .project-section p {
+            color: var(--text-secondary);
+            line-height: 1.8;
+            margin-bottom: 20px;
+        }
+        .tech-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin: 20px 0;
+        }
+        .tech-tag {
+            background: rgba(77, 163, 255, 0.1);
+            color: var(--accent-primary);
+            padding: 8px 16px;
+            border-radius: 25px;
+            font-size: 0.9rem;
+            border: 1px solid rgba(77, 163, 255, 0.2);
+        }
+        .result-image {
+            background: var(--bg-primary);
+            padding: 20px;
+            border-radius: 15px;
+            margin: 30px 0;
+            text-align: center;
+        }
+        .result-image img {
+            max-width: 100%;
+            border-radius: 10px;
+            border: 1px solid rgba(77, 163, 255, 0.2);
+        }
+        .result-image .caption {
+            color: var(--text-footer);
+            font-size: 0.9rem;
+            margin-top: 10px;
+            font-style: italic;
+        }
+        .code-block {
+            background: var(--bg-primary);
+            padding: 20px;
+            border-radius: 10px;
+            border-left: 3px solid var(--accent-primary);
+            margin: 20px 0;
+            font-family: 'Courier New', monospace;
+            color: var(--text-secondary);
+            overflow-x: auto;
+        }
+        .btn-group {
+            display: flex;
+            gap: 15px;
+            margin-top: 30px;
+        }
+        .btn-group .btn {
+            flex: 1;
+            text-align: center;
+        }
+        @media (max-width: 768px) {
+            .project-header h1 {
+                font-size: 2rem;
+            }
+            .project-section {
+                padding: 25px;
+            }
+            .btn-group {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div id="header"></div>
+
+    <main>
+        <div class="project-header">
+            <div class="container">
+                <h1>Análisis de Modelos Cosmológicos con CLASS + Monte Python</h1>
+                <p class="project-subtitle">Estudio de parámetros cosmológicos mediante inferencia bayesiana</p>
+            </div>
+        </div>
+
+        <div class="project-content">
+            <div class="container">
+                <div class="project-section">
+                    <h2>🌌 Descripción del Proyecto</h2>
+                    <p>Actualmente trabajo en la exploración de modelos cosmológicos más allá del modelo ΛCDM estándar. Utilizo <strong>CLASS</strong> (Cosmic Linear Anisotropy Solving System) para calcular espectros de potencia y funciones de correlación, y <strong>Monte Python</strong> para realizar inferencia bayesiana mediante cadenas de Markov Monte Carlo (MCMC).</p>
+                    
+                    <p>El objetivo es estudiar cómo varían los parámetros cosmológicos (densidad de materia oscura, parámetro de Hubble, índice espectral) al introducir modificaciones en la ecuación de estado de la energía oscura o modelos de materia oscura interactuante.</p>
+
+                    <div class="tech-tags">
+                        <span class="tech-tag">Python</span>
+                        <span class="tech-tag">CLASS</span>
+                        <span class="tech-tag">Monte Python</span>
+                        <span class="tech-tag">MCMC</span>
+                        <span class="tech-tag">Cosmología</span>
+                        <span class="tech-tag">Inferencia Bayesiana</span>
+                    </div>
+                </div>
+
+                <div class="project-section">
+                    <h2>🔭 Metodología</h2>
+                    
+                    <h3>1. Cálculo del espectro de potencia con CLASS</h3>
+                    <p>CLASS resuelve las ecuaciones de perturbación cosmológica para calcular el espectro de potencia de materia P(k) y las funciones de correlación de los modos escalares y tensoriales.</p>
+
+                    <div class="code-block">
+                        <pre><code># Parámetros de entrada para CLASS
+omega_b = 0.02242
+omega_cdm = 0.11933
+h = 0.6766
+ns = 0.9665
+ln10^{10}A_s = 3.047</code></pre>
+                    </div>
+
+                    <h3>2. Inferencia bayesiana con Monte Python</h3>
+                    <p>Monte Python utiliza algoritmos MCMC para explorar el espacio de parámetros y encontrar las regiones más probables dadas las observaciones (Planck, BAO, SNIa).</p>
+
+                    <div class="result-image">
+                        <div style="height: 300px; background: linear-gradient(45deg, var(--bg-primary), var(--bg-secondary)); display: flex; align-items: center; justify-content: center;">
+                            <i class="fas fa-project-diagram" style="font-size: 5rem; color: var(--accent-primary); opacity: 0.5;"></i>
+                        </div>
+                        <p class="caption">Cadenas MCMC para parámetros cosmológicos</p>
+                    </div>
+                </div>
+
+                <div class="project-section">
+                    <h2>📈 Resultados Preliminares</h2>
+                    
+                    <p>Comparación del espectro de potencia de materia para diferentes valores de Ω<sub>cdm</sub>. Las cadenas MCMC muestran correlaciones interesantes entre parámetros que estoy analizando actualmente.</p>
+
+                    <ul style="color: var(--text-secondary); margin-left: 20px;">
+                        <li><strong>Ω<sub>m</sub>:</strong> 0.315 ± 0.007</li>
+                        <li><strong>H<sub>0</sub>:</strong> 67.4 ± 0.5 km/s/Mpc</li>
+                        <li><strong>σ<sub>8</sub>:</strong> 0.811 ± 0.006</li>
+                    </ul>
+
+                    <p>Próximos pasos: Implementar modelos con interacción en el sector oscuro y comparar con datos de encuestas de galaxias.</p>
+                </div>
+
+                <div class="project-section">
+                    <h2>📚 Publicaciones Relacionadas</h2>
+                    <ul style="color: var(--text-secondary); margin-left: 20px;">
+                        <li>Poster en 6° Congreso Internacional de Modelación Matemática, UTM (2024)</li>
+                        <li>Presentación en el Diplomado en Física Teórica, MCTP (2025)</li>
+                    </ul>
+                </div>
+
+                <div class="project-section" style="text-align: center;">
+                    <h2>🔗 Enlaces</h2>
+                    <div class="btn-group">
+                        <a href="https://github.com/tuusuario/cosmology-class" target="_blank" class="btn btn-primary">
+                            <i class="fab fa-github"></i> Ver código
+                        </a>
+                        <a href="#" class="btn btn-secondary">
+                            <i class="fas fa-file-pdf"></i> Notas técnicas
+                        </a>
+                    </div>
+                    <p style="margin-top: 30px; color: var(--text-footer);">
+                        <i class="fas fa-calendar"></i> Proyecto activo - Actualizado: Marzo 2025
+                    </p>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <div id="footer"></div>
+
+    <script src="../../js/loader.js"></script>
+</body>
+</html>

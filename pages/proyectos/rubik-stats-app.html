@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rubik's Stats Tracker | Esteban González</title>
+    <link rel="stylesheet" href="../../css/styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        /* Mismos estilos que antes */
+        .project-header {
+            background: linear-gradient(135deg, var(--gradient-start), var(--gradient-end));
+            padding: 120px 0 60px;
+            text-align: center;
+        }
+        .project-header h1 {
+            font-size: 2.8rem;
+            margin-bottom: 1rem;
+        }
+        .project-header .project-subtitle {
+            color: var(--text-secondary);
+            font-size: 1.3rem;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        .project-content {
+            padding: 60px 0;
+            background: var(--bg-primary);
+        }
+        .project-section {
+            background: var(--bg-secondary);
+            padding: 40px;
+            border-radius: 20px;
+            margin-bottom: 40px;
+            border: 1px solid rgba(77, 163, 255, 0.1);
+        }
+        .project-section h2 {
+            color: var(--accent-primary);
+            margin-bottom: 20px;
+            font-size: 2rem;
+        }
+        .project-section h3 {
+            color: var(--text-primary);
+            margin: 20px 0 10px;
+        }
+        .project-section p {
+            color: var(--text-secondary);
+            line-height: 1.8;
+            margin-bottom: 20px;
+        }
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin: 30px 0;
+        }
+        .feature-card {
+            background: var(--bg-primary);
+            padding: 25px;
+            border-radius: 15px;
+            text-align: center;
+            border: 1px solid rgba(77, 163, 255, 0.1);
+            transition: var(--transition);
+        }
+        .feature-card:hover {
+            transform: translateY(-5px);
+            border-color: var(--accent-primary);
+        }
+        .feature-card i {
+            font-size: 2.5rem;
+            color: var(--accent-primary);
+            margin-bottom: 15px;
+        }
+        .feature-card h4 {
+            color: var(--text-primary);
+            margin-bottom: 10px;
+        }
+        .feature-card p {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            margin: 0;
+        }
+        .tech-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin: 20px 0;
+        }
+        .tech-tag {
+            background: rgba(77, 163, 255, 0.1);
+            color: var(--accent-primary);
+            padding: 8px 16px;
+            border-radius: 25px;
+            font-size: 0.9rem;
+            border: 1px solid rgba(77, 163, 255, 0.2);
+        }
+        .result-image {
+            background: var(--bg-primary);
+            padding: 20px;
+            border-radius: 15px;
+            margin: 30px 0;
+            text-align: center;
+        }
+        .result-image img {
+            max-width: 100%;
+            border-radius: 10px;
+            border: 1px solid rgba(77, 163, 255, 0.2);
+        }
+        .result-image .caption {
+            color: var(--text-footer);
+            font-size: 0.9rem;
+            margin-top: 10px;
+            font-style: italic;
+        }
+        .btn-group {
+            display: flex;
+            gap: 15px;
+            margin-top: 30px;
+        }
+        .btn-group .btn {
+            flex: 1;
+            text-align: center;
+        }
+        @media (max-width: 768px) {
+            .project-header h1 {
+                font-size: 2rem;
+            }
+            .project-section {
+                padding: 25px;
+            }
+            .btn-group {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div id="header"></div>
+
+    <main>
+        <div class="project-header">
+            <div class="container">
+                <h1>Rubik's Stats Tracker</h1>
+                <p class="project-subtitle">Aplicación para análisis estadístico de tiempos en speedcubing</p>
+            </div>
+        </div>
+
+        <div class="project-content">
+            <div class="container">
+                <div class="project-section">
+                    <h2>🎯 Descripción del Proyecto</h2>
+                    <p>Como speedcuber y coordinador del Oaxaca Rubik's Team, siempre he sentido la necesidad de tener mejores herramientas para analizar mi progreso. Por eso desarrollé <strong>Rubik's Stats Tracker</strong>, una aplicación que permite registrar, visualizar y analizar tiempos de práctica en speedcubing.</p>
+                    
+                    <p>La app está diseñada para ayudar a speedcubers de todos los niveles a entender su evolución, identificar áreas de mejora y mantener motivación a través de visualizaciones claras de su progreso.</p>
+
+                    <div class="tech-tags">
+                        <span class="tech-tag">Python</span>
+                        <span class="tech-tag">Pandas</span>
+                        <span class="tech-tag">Plotly</span>
+                        <span class="tech-tag">Streamlit</span>
+                        <span class="tech-tag">SQLite</span>
+                        <span class="tech-tag">Estadística</span>
+                    </div>
+                </div>
+
+                <div class="project-section">
+                    <h2>✨ Características Principales</h2>
+                    
+                    <div class="feature-grid">
+                        <div class="feature-card">
+                            <i class="fas fa-chart-line"></i>
+                            <h4>Progreso temporal</h4>
+                            <p>Gráficas interactivas de evolución de tiempos</p>
+                        </div>
+                        <div class="feature-card">
+                            <i class="fas fa-calculator"></i>
+                            <h4>Métricas avanzadas</h4>
+                            <p>Promedios móviles, mejores tiempos, consistencia</p>
+                        </div>
+                        <div class="feature-card">
+                            <i class="fas fa-table"></i>
+                            <h4>Exportación de datos</h4>
+                            <p>CSV, Excel y comparación con WCA</p>
+                        </div>
+                        <div class="feature-card">
+                            <i class="fas fa-chart-pie"></i>
+                            <h4>Distribuciones</h4>
+                            <p>Histogramas y análisis de frecuencia</p>
+                        </div>
+                    </div>
+
+                    <h3>📊 Ejemplo de análisis</h3>
+                    <div class="result-image">
+                        <div style="height: 300px; background: linear-gradient(45deg, var(--bg-primary), var(--bg-secondary)); display: flex; align-items: center; justify-content: center;">
+                            <i class="fas fa-chart-bar" style="font-size: 5rem; color: var(--accent-primary); opacity: 0.5;"></i>
+                        </div>
+                        <p class="caption">Evolución de tiempos promedio en 3x3 (últimos 6 meses)</p>
+                    </div>
+                </div>
+
+                <div class="project-section">
+                    <h2>💻 Tecnologías Utilizadas</h2>
+                    
+                    <h3>Backend</h3>
+                    <ul style="color: var(--text-secondary); margin-left: 20px;">
+                        <li><strong>Python:</strong> Lógica principal y procesamiento de datos</li>
+                        <li><strong>Pandas:</strong> Manipulación y análisis de datos</li>
+                        <li><strong>SQLite:</strong> Base de datos local para almacenar sesiones</li>
+                    </ul>
+
+                    <h3>Frontend</h3>
+                    <ul style="color: var(--text-secondary); margin-left: 20px;">
+                        <li><strong>Streamlit:</strong> Framework para crear la interfaz web</li>
+                        <li><strong>Plotly:</strong> Visualizaciones interactivas</li>
+                        <li><strong>HTML/CSS:</strong> Personalización de estilos</li>
+                    </ul>
+                </div>
+
+                <div class="project-section">
+                    <h2>📈 Métricas que calcula la app</h2>
+                    <ul style="color: var(--text-secondary); margin-left: 20px;">
+                        <li><strong>Promedio y desviación estándar:</strong> Por sesión y global</li>
+                        <li><strong>Mejor tiempo y peor tiempo:</strong> Con outliers removidos</li>
+                        <li><strong>Promedio de 5/12/50:</strong> Estándar en speedcubing</li>
+                        <li><strong>Tendencia:</strong> Regresión lineal para ver mejora</li>
+                        <li><strong>Consistencia:</strong> Porcentaje de tiempos dentro de rangos</li>
+                    </ul>
+
+                    <div class="code-block">
+                        <pre><code># Ejemplo de cálculo de promedio móvil
+def moving_average(times, window=5):
+    return pd.Series(times).rolling(window=window).mean()
+
+# Detección automática de outliers
+def remove_outliers(times, threshold=2.5):
+    mean = np.mean(times)
+    std = np.std(times)
+    return [t for t in times if abs(t - mean) < threshold * std]</code></pre>
+                    </div>
+                </div>
+
+                <div class="project-section">
+                    <h2>🚀 Próximas características</h2>
+                    <ul style="color: var(--text-secondary); margin-left: 20px;">
+                        <li><strong>Integración con WCA:</strong> Importar automáticamente resultados de competencias</li>
+                        <li><strong>Comparación con otros cubers:</strong> Anonimizada para ver ranking</li>
+                        <li><strong>App móvil:</strong> Versión para iOS/Android con React Native</li>
+                        <li><strong>Predicción de tiempos:</strong> Usando ML para estimar próxima competencia</li>
+                    </ul>
+                </div>
+
+                <div class="project-section" style="text-align: center;">
+                    <h2>🔗 Enlaces</h2>
+                    <div class="btn-group">
+                        <a href="https://github.com/tuusuario/rubik-stats-tracker" target="_blank" class="btn btn-primary">
+                            <i class="fab fa-github"></i> Código fuente
+                        </a>
+                        <a href="#" target="_blank" class="btn btn-secondary">
+                            <i class="fas fa-rocket"></i> Demo en vivo
+                        </a>
+                        <a href="#" class="btn btn-secondary">
+                            <i class="fas fa-download"></i> Descargar app
+                        </a>
+                    </div>
+                    <p style="margin-top: 30px; color: var(--text-footer);">
+                        <i class="fas fa-cube"></i> Desarrollado para la comunidad speedcuber
+                    </p>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <div id="footer"></div>
+
+    <script src="../../js/loader.js"></script>
+</body>
+</html>
