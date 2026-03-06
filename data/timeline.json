@@ -12,7 +12,7 @@
             "title": "Titulación Ingeniería en Física Aplicada",
             "description": "Tesis: 'Solución de la ecuación de calor unidimensional estacionaria empleando una red neuronal físicamente informada'.",
             "category": "education",
-            "link": "pages/proyectos/pinn-variable.html"
+            "link": "pages/proyectos/pinn-variable-bc.html"
         },
         {
             "date": "2024",
