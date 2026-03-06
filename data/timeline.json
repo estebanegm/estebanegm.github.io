@@ -1,0 +1,53 @@
+{
+    "events": [
+        {
+            "date": "2025",
+            "title": "Diplomado en Física Teórica - MCTP",
+            "description": "Especialización en cosmología numérica y teoría de campos.",
+            "category": "education",
+            "link": ""
+        },
+        {
+            "date": "2024",
+            "title": "Titulación Ingeniería en Física Aplicada",
+            "description": "Tesis: 'Solución de la ecuación de calor unidimensional estacionaria empleando una red neuronal físicamente informada'.",
+            "category": "education",
+            "link": "pages/proyectos/pinn-variable.html"
+        },
+        {
+            "date": "2024",
+            "title": "Poster en 2° Congreso ICF UNAM",
+            "description": "Presentación de resultados de tesis sobre PINNs.",
+            "category": "research",
+            "link": ""
+        },
+        {
+            "date": "2023",
+            "title": "Estancia de Investigación - ICF UNAM",
+            "description": "Resolución de ecuaciones diferenciales con redes neuronales.",
+            "category": "research",
+            "link": ""
+        },
+        {
+            "date": "2022",
+            "title": "Estancia Profesional - CINVESTAV",
+            "description": "Análisis de datos y algoritmos predictivos.",
+            "category": "professional",
+            "link": ""
+        },
+        {
+            "date": "2018",
+            "title": "Miembro del Oaxaca Rubik's Team",
+            "description": "Inicio como tallerista, actualmente coordinador y representante.",
+            "category": "rubik",
+            "link": "#cubos"
+        },
+        {
+            "date": "2016",
+            "title": "Primera competencia WCA",
+            "description": "ID WCA: 2016MEND03. Inicio en el speedcubing competitivo.",
+            "category": "rubik",
+            "link": "https://www.worldcubeassociation.org/persons/2016MEND03"
+        }
+    ]
+}

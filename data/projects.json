@@ -1,0 +1,34 @@
+{
+    "projects": [
+        {
+            "title": "PINN con Condiciones de Frontera Variables",
+            "description": "Extensión de tesis: Red Neuronal Físicamente Informada para ecuación de calor 1D con condiciones de frontera variables.",
+            "badge": "Investigación",
+            "featured": true,
+            "tags": ["Python", "TensorFlow", "PINNs", "EDPs"],
+            "link": "pages/proyectos/pinn-variable.html",
+            "codeLink": "https://github.com/tuusuario/pinn-variable",
+            "canvasId": "pinn-canvas"
+        },
+        {
+            "title": "Análisis de Modelos Cosmológicos",
+            "description": "Estudio de parámetros cosmológicos (materia oscura) usando CLASS + Monte Python e inferencia bayesiana.",
+            "badge": "Cosmología",
+            "featured": true,
+            "tags": ["Python", "CLASS", "Monte Python", "MCMC"],
+            "link": "pages/proyectos/cosmology-class.html",
+            "codeLink": "https://github.com/tuusuario/cosmology-class",
+            "canvasId": "cosmology-canvas"
+        },
+        {
+            "title": "Rubik's Stats Tracker",
+            "description": "Aplicación para análisis estadístico de tiempos en speedcubing. Visualización de progreso, gráficas de evolución y métricas de mejora.",
+            "badge": "App Personal",
+            "featured": true,
+            "tags": ["Python", "Pandas", "Plotly", "Streamlit"],
+            "link": "pages/proyectos/rubik-stats.html",
+            "codeLink": "https://github.com/tuusuario/rubik-stats",
+            "canvasId": "rubik-canvas"
+        }
+    ]
+}
