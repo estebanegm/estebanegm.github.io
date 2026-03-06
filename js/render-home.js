@@ -1,26 +1,64 @@
+// ===== FUNCIÓN PARA INICIALIZAR EL MENÚ HAMBURGUESA =====
+function initMobileMenu() {
+    const hamburger = document.querySelector('.hamburger');
+    const navMenu = document.querySelector('.nav-menu');
+    
+    if (!hamburger || !navMenu) {
+        console.warn('Menú hamburguesa no encontrado');
+        return;
+    }
+    
+    // Remover event listeners anteriores
+    const newHamburger = hamburger.cloneNode(true);
+    hamburger.parentNode.replaceChild(newHamburger, hamburger);
+    const newNavMenu = navMenu.cloneNode(true);
+    navMenu.parentNode.replaceChild(newNavMenu, navMenu);
+    
+    // Agregar nuevo event listener
+    newHamburger.addEventListener('click', function(e) {
+        e.stopPropagation();
+        this.classList.toggle('active');
+        newNavMenu.classList.toggle('active');
+        document.body.style.overflow = newNavMenu.classList.contains('active') ? 'hidden' : 'auto';
+    });
+    
+    // Cerrar menú al hacer clic en un enlace
+    newNavMenu.querySelectorAll('a').forEach(link => {
+        link.addEventListener('click', () => {
+            newHamburger.classList.remove('active');
+            newNavMenu.classList.remove('active');
+            document.body.style.overflow = 'auto';
+        });
+    });
+    
+    // Cerrar menú al hacer clic fuera
+    document.addEventListener('click', function(e) {
+        if (!newNavMenu.contains(e.target) && !newHamburger.contains(e.target)) {
+            newHamburger.classList.remove('active');
+            newNavMenu.classList.remove('active');
+            document.body.style.overflow = 'auto';
+        }
+    });
+}
+
 // ===== RENDERIZAR TIMELINE =====
 function loadTimeline() {
+    const container = document.getElementById('timeline-container');
+    if (!container) {
+        console.error('❌ No se encontró timeline-container');
+        return;
+    }
+    
     fetch('data/timeline.json')
         .then(response => {
             if (!response.ok) throw new Error('Error cargando timeline');
             return response.json();
         })
         .then(data => {
-            const container = document.getElementById('timeline-container');
-            if (!container) {
-                console.error('No se encontró el contenedor timeline-container');
-                return;
-            }
-            
-            // Limpiar contenedor
             container.innerHTML = '';
             
-            // Ordenar eventos por fecha (más reciente primero)
-            const events = data.events.sort((a, b) => {
-                return parseInt(b.date) - parseInt(a.date);
-            });
+            const events = data.events.sort((a, b) => parseInt(b.date) - parseInt(a.date));
             
-            // Generar HTML
             events.forEach(event => {
                 const eventHtml = `
                     <div class="timeline-item ${event.category}">
@@ -35,37 +73,32 @@ function loadTimeline() {
                 container.innerHTML += eventHtml;
             });
             
-            console.log('✅ Timeline cargado correctamente');
+            console.log('✅ Timeline cargado');
         })
         .catch(error => {
             console.error('Error cargando timeline:', error);
-            // Mostrar mensaje de error en el contenedor
-            const container = document.getElementById('timeline-container');
-            if (container) {
-                container.innerHTML = `
-                    <div style="text-align: center; color: #ff6b6b; padding: 2rem;">
-                        <i class="fas fa-exclamation-triangle"></i>
-                        Error al cargar la línea de tiempo
-                    </div>
-                `;
-            }
+            container.innerHTML = `
+                <div style="text-align: center; color: #ff6b6b; padding: 2rem;">
+                    Error al cargar la línea de tiempo
+                </div>
+            `;
         });
 }
 
 // ===== RENDERIZAR PROYECTOS =====
 function loadProjects() {
+    const container = document.getElementById('projects-container');
+    if (!container) {
+        console.error('❌ No se encontró projects-container');
+        return;
+    }
+    
     fetch('data/projects.json')
         .then(response => {
             if (!response.ok) throw new Error('Error cargando proyectos');
             return response.json();
         })
         .then(data => {
-            const container = document.getElementById('projects-container');
-            if (!container) {
-                console.error('No se encontró el contenedor projects-container');
-                return;
-            }
-            
             container.innerHTML = '';
             
             data.projects.filter(p => p.featured).forEach(project => {
@@ -93,7 +126,6 @@ function loadProjects() {
                 container.innerHTML += projectHtml;
             });
 
-            // Dibujar canvases después de un pequeño retraso
             setTimeout(() => {
                 drawPINNPreview();
                 drawCosmologyPreview();
@@ -105,18 +137,18 @@ function loadProjects() {
 
 // ===== RENDERIZAR "AHORA MISMO" =====
 function loadNow() {
+    const container = document.getElementById('now-container');
+    if (!container) {
+        console.error('❌ No se encontró now-container');
+        return;
+    }
+    
     fetch('data/now.json')
         .then(response => {
             if (!response.ok) throw new Error('Error cargando now');
             return response.json();
         })
         .then(data => {
-            const container = document.getElementById('now-container');
-            if (!container) {
-                console.error('No se encontró el contenedor now-container');
-                return;
-            }
-            
             let html = '<div class="now-content">';
             html += '<h2 class="section-title">⚡ Ahora Mismo</h2>';
             html += '<ul>';
@@ -139,11 +171,9 @@ function drawPINNPreview() {
     const ctx = canvas.getContext('2d');
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     
-    // Dibujar fondo
     ctx.fillStyle = '#121a30';
     ctx.fillRect(0, 0, canvas.width, canvas.height);
     
-    // Dibujar gráfica
     ctx.strokeStyle = '#4da3ff';
     ctx.lineWidth = 2;
     ctx.beginPath();
@@ -194,7 +224,6 @@ function drawRubikPreview() {
     ctx.fillStyle = '#121a30';
     ctx.fillRect(0, 0, canvas.width, canvas.height);
     
-    // Dibujar barras
     ctx.fillStyle = '#4da3ff';
     for (let i = 0; i < 10; i++) {
         let height = 30 + i * 8;
@@ -206,19 +235,25 @@ function drawRubikPreview() {
     ctx.fillText('Evolución de tiempos', 20, 30);
 }
 
-// ===== INICIALIZAR TODO CUANDO EL DOM ESTÉ LISTO =====
-document.addEventListener('DOMContentLoaded', function() {
-    console.log('DOM cargado, inicializando...');
+// ===== INICIALIZAR TODO =====
+function init() {
+    console.log('Inicializando página...');
+    loadTimeline();
+    loadProjects();
+    loadNow();
     
-    // Verificar que los contenedores existen
+    // Inicializar menú después de que los componentes estén cargados
     setTimeout(() => {
-        loadTimeline();
-        loadProjects();
-        loadNow();
-    }, 500); // Pequeño retraso para asegurar que los componentes se cargaron
-});
+        initMobileMenu();
+    }, 1000);
+}
 
-// También intentar cuando los componentes se carguen
-window.addEventListener('load', function() {
-    console.log('Página completamente cargada');
-});
+// Escuchar evento de componentes cargados
+document.addEventListener('componentsLoaded', init);
+
+// Si los componentes ya están cargados
+if (document.readyState === 'complete') {
+    init();
+} else {
+    window.addEventListener('load', init);
+}
