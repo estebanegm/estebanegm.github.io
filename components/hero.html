@@ -1,12 +1,38 @@
 <section id="inicio" class="hero">
     <div class="hero-content">
-        <h1 class="glitch-text">
-            <span class="nombre-completo">
-                <span class="nombres">Esteban Elías</span>
-                <span class="apellidos">González Méndez</span>
+        <h1 class="glitch-text" style="font-size: 3.5rem; margin-bottom: 1rem;">
+            <span class="nombre-completo" style="display: inline !important;">
+                <span class="nombres" style="display: inline !important;">Esteban Elías</span>
+                <span class="apellidos" style="display: inline !important;">González Méndez</span>
             </span>
         </h1>
-        <p class="hero-subtitle">Ingeniero en Física Aplicada | Cosmología Computacional | Speedcuber</p> <!-- Cambiado -->
+        <style>
+            @media (max-width: 768px) {
+                .hero .glitch-text {
+                    font-size: 2.2rem !important;
+                }
+                .hero .glitch-text .nombre-completo {
+                    display: flex !important;
+                    flex-direction: column !important;
+                    gap: 0.2rem !important;
+                }
+                .hero .glitch-text .nombres,
+                .hero .glitch-text .apellidos {
+                    display: block !important;
+                    font-size: 2.2rem !important;
+                }
+            }
+            @media (max-width: 480px) {
+                .hero .glitch-text {
+                    font-size: 1.8rem !important;
+                }
+                .hero .glitch-text .nombres,
+                .hero .glitch-text .apellidos {
+                    font-size: 1.8rem !important;
+                }
+            }
+        </style>
+        <p class="hero-subtitle">Ingeniero en Física Aplicada | Cosmología Computacional | Speedcuber</p>
         <!--<div class="hero-stats">
             <div class="hero-stat-item">
                 <span class="hero-stat-number">4+</span>
@@ -20,8 +46,7 @@
                 <span class="hero-stat-number">8+</span>
                 <span class="hero-stat-label">Competencias WCA</span>
             </div>
-        </div>
-        -->
+        </div>-->
         <div class="hero-buttons">
             <a href="#proyectos-destacados" class="btn btn-primary">Ver Proyectos</a>
             <a href="#contacto" class="btn btn-secondary">Contactar</a>
