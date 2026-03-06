@@ -6,7 +6,7 @@
             "badge": "Investigación",
             "featured": true,
             "tags": ["Python", "TensorFlow", "PINNs", "EDPs"],
-            "link": "pages/proyectos/pinn-variable.html",
+            "pageFile": "pinn-variable-bc.html",
             "codeLink": "https://github.com/tuusuario/pinn-variable",
             "canvasId": "pinn-canvas"
         },
@@ -16,7 +16,7 @@
             "badge": "Cosmología",
             "featured": true,
             "tags": ["Python", "CLASS", "Monte Python", "MCMC"],
-            "link": "pages/proyectos/cosmology-class.html",
+            "pageFile": "cosmology-class.html",
             "codeLink": "https://github.com/tuusuario/cosmology-class",
             "canvasId": "cosmology-canvas"
         },
@@ -26,7 +26,7 @@
             "badge": "App Personal",
             "featured": true,
             "tags": ["Python", "Pandas", "Plotly", "Streamlit"],
-            "link": "pages/proyectos/rubik-stats.html",
+            "pageFile": "rubik-stats-app.html",
             "codeLink": "https://github.com/tuusuario/rubik-stats",
             "canvasId": "rubik-canvas"
         }
