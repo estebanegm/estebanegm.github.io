@@ -1221,73 +1221,78 @@ main {
     max-width: 100%;
 }
 
-/* ===== NOMBRE RESPONSIVE ===== */
-.nombre-completo {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 0.2rem;
+/* ===== NOMBRE RESPONSIVE - VERSIÓN CORREGIDA ===== */
+.hero .glitch-text {
+    font-size: 3.5rem !important;
 }
 
-.nombres, .apellidos {
-    display: block;
+.hero .glitch-text .nombre-completo {
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    justify-content: center !important;
+    width: 100% !important;
 }
 
-/* En pantallas grandes (mayor a 768px) */
+.hero .glitch-text .nombres,
+.hero .glitch-text .apellidos {
+    display: block !important;
+    width: 100% !important;
+    text-align: center !important;
+}
+
+/* Desktop (mayor a 768px) */
 @media (min-width: 769px) {
-    .nombre-completo {
-        flex-direction: row;
-        gap: 0.5rem;
-        justify-content: center;
-        flex-wrap: wrap;
+    .hero .glitch-text {
+        font-size: 3.5rem !important;
     }
     
-    .nombres, .apellidos {
-        display: inline;
+    .hero .glitch-text .nombre-completo {
+        flex-direction: row !important;
+        gap: 0.5rem !important;
+        flex-wrap: wrap !important;
     }
     
-    /* Agregar espacio entre nombres y apellidos */
-    .nombres::after {
-        content: ' ';
-        white-space: pre;
+    .hero .glitch-text .nombres,
+    .hero .glitch-text .apellidos {
+        display: inline !important;
+        width: auto !important;
+    }
+    
+    /* Espacio entre nombres y apellidos */
+    .hero .glitch-text .nombres::after {
+        content: " " !important;
+        white-space: pre !important;
     }
 }
 
-/* En pantallas medianas */
-@media (min-width: 769px) and (max-width: 1024px) {
-    .glitch-text {
-        font-size: 2.8rem;
-    }
-}
-
-/* En móvil (hasta 768px) */
+/* Móvil (hasta 768px) */
 @media (max-width: 768px) {
-    .nombre-completo {
-        flex-direction: column;
-        gap: 0.1rem;
+    .hero .glitch-text {
+        font-size: 2.2rem !important;
+        line-height: 1.3 !important;
     }
     
-    .glitch-text {
-        font-size: 2rem;
-        line-height: 1.3;
+    .hero .glitch-text .nombre-completo {
+        flex-direction: column !important;
+        gap: 0.2rem !important;
     }
     
-    .nombres {
-        font-size: 2rem;
-    }
-    
-    .apellidos {
-        font-size: 2rem;
+    .hero .glitch-text .nombres,
+    .hero .glitch-text .apellidos {
+        font-size: 2.2rem !important;
+        line-height: 1.3 !important;
     }
 }
 
-/* En pantallas muy pequeñas */
+/* Pantallas muy pequeñas */
 @media (max-width: 480px) {
-    .glitch-text {
-        font-size: 1.8rem;
+    .hero .glitch-text {
+        font-size: 1.8rem !important;
     }
     
-    .nombres, .apellidos {
-        font-size: 1.8rem;
+    .hero .glitch-text .nombres,
+    .hero .glitch-text .apellidos {
+        font-size: 1.8rem !important;
     }
 }
