@@ -7,7 +7,7 @@
     <link rel="stylesheet" href="../../css/styles.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <script src="https://cdn.plot.ly/plotly-2.27.0.min.js" charset="utf-8"></script>
+    <script src="https://cdn.plot.ly/plotly-2.27.0.min.js"></script>
     <style>
         .project-header {
             background: linear-gradient(135deg, var(--gradient-start), var(--gradient-end));
@@ -206,12 +206,6 @@
             color: var(--text-secondary);
         }
         
-        .error-message {
-            color: #ff6b6b;
-            text-align: center;
-            padding: 20px;
-        }
-        
         @media (max-width: 968px) {
             .dashboard-layout {
                 grid-template-columns: 1fr;
@@ -283,135 +277,91 @@
         N = self.net(x)
         return T_left * (1 - x) + T_right * x + D * N</code></pre>
                     </div>
-
-                    <h3>Innovación Principal</h3>
-                    <p>La clave de esta extensión es que la red aprende a resolver la ecuación para <strong>cualquier condición de frontera</strong> dentro de un rango definido. Esto se logra alimentando a la red no solo con las coordenadas espaciales, sino también con los valores de frontera como entradas adicionales durante el entrenamiento.</p>
-                    
-                    <p>El modelo fue entrenado durante <strong>5000 épocas</strong> con condiciones de frontera aleatorias entre -20 y 50, logrando una pérdida final de <strong>2.36e-3</strong> y un mínimo de <strong>9.48e-6</strong>.</p>
                 </div>
 
-                <!-- Dashboard Interactivo -->
+                <!-- Dashboard Interactivo con DATOS REALES -->
                 <div class="project-section">
-                    <h2>📊 Dashboard Interactivo</h2>
-                    <p>Ajusta los sliders para ver cómo la PINN predice la solución para diferentes condiciones de frontera. Los resultados mostrados son <strong>predicciones reales del modelo entrenado</strong> (datos del notebook).</p>
+                    <h2>📊 Dashboard Interactivo - Resultados Reales</h2>
+                    <p>Los datos mostrados son predicciones DIRECTAS del modelo entrenado en PyTorch (5000 épocas).</p>
                     
                     <div class="dashboard-container">
-                        <!-- Controles -->
-                        <div class="controls-panel">
-                            <h3 style="color: var(--accent-primary); margin-bottom: 20px;">🎮 Controles</h3>
-                            
-                            <div class="slider-container">
-                                <label>
-                                    T(0) - Temperatura en frontera izquierda
-                                    <span id="tLeftValue" class="slider-value">0.0</span>
-                                </label>
-                                <input type="range" id="tLeftSlider" class="slider" min="-20" max="50" value="0" step="0.5">
-                            </div>
-                            
-                            <div class="slider-container">
-                                <label>
-                                    T(1) - Temperatura en frontera derecha
-                                    <span id="tRightValue" class="slider-value">10.0</span>
-                                </label>
-                                <input type="range" id="tRightSlider" class="slider" min="-20" max="50" value="10" step="0.5">
-                            </div>
-                            
-                            <div class="checkbox-group">
-                                <label>
-                                    <input type="checkbox" id="showExact" checked>
-                                    Mostrar solución exacta
-                                </label>
-                                <label>
-                                    <input type="checkbox" id="showError" checked>
-                                    Mostrar error
-                                </label>
-                            </div>
+                        <div id="loadingIndicator" class="loading">
+                            <i class="fas fa-spinner fa-spin"></i> Cargando datos del modelo...
                         </div>
                         
-                        <!-- Layout principal -->
-                        <div class="dashboard-layout">
-                            <!-- Gráfica principal -->
-                            <div class="plot-container">
-                                <div id="solutionPlot" style="width:100%; height:400px;"></div>
+                        <div id="dashboardContent" style="display: none;">
+                            <!-- Controles -->
+                            <div class="controls-panel">
+                                <h3 style="color: var(--accent-primary); margin-bottom: 20px;">🎮 Controles</h3>
+                                
+                                <div class="slider-container">
+                                    <label>
+                                        T(0) - Temperatura izquierda
+                                        <span id="tLeftValue" class="slider-value">0.0</span>
+                                    </label>
+                                    <input type="range" id="tLeftSlider" class="slider" min="-20" max="50" value="0" step="0.5">
+                                </div>
+                                
+                                <div class="slider-container">
+                                    <label>
+                                        T(1) - Temperatura derecha
+                                        <span id="tRightValue" class="slider-value">10.0</span>
+                                    </label>
+                                    <input type="range" id="tRightSlider" class="slider" min="-20" max="50" value="10" step="0.5">
+                                </div>
+                                
+                                <div class="checkbox-group">
+                                    <label>
+                                        <input type="checkbox" id="showExact" checked>
+                                        Mostrar solución exacta
+                                    </label>
+                                    <label>
+                                        <input type="checkbox" id="showError" checked>
+                                        Mostrar error
+                                    </label>
+                                </div>
                             </div>
                             
-                            <!-- Panel de métricas -->
-                            <div class="metrics-panel" id="metricsPanel">
-                                <strong>📈 MÉTRICAS</strong>
-                                <span style="display:block; margin:10px 0; border-bottom:1px solid rgba(77,163,255,0.3);"></span>
-                                Calculando...
+                            <!-- Layout principal -->
+                            <div class="dashboard-layout">
+                                <!-- Gráfica principal -->
+                                <div class="plot-container">
+                                    <div id="solutionPlot" style="width:100%; height:400px;"></div>
+                                </div>
+                                
+                                <!-- Panel de métricas -->
+                                <div class="metrics-panel" id="metricsPanel">
+                                    Calculando...
+                                </div>
                             </div>
-                        </div>
-                        
-                        <!-- Gráfica de error -->
-                        <div class="plot-container" style="margin-top: 20px;" id="errorPlotContainer">
-                            <div id="errorPlot" style="width:100%; height:250px;"></div>
-                        </div>
-                        
-                        <!-- Gráfica de entrenamiento -->
-                        <div class="training-plot">
-                            <h3 style="color: var(--accent-primary); margin-bottom: 15px;">📉 Evolución del Entrenamiento (5000 épocas)</h3>
-                            <div id="trainingPlot" style="width:100%; height:300px;"></div>
-                            <p style="color: var(--text-secondary); margin-top: 15px; font-size:0.9rem;">
-                                El modelo fue entrenado durante <strong>5000 épocas</strong> con condiciones de frontera aleatorias. 
-                                La pérdida final fue de <strong>2.36e-3</strong>, con un mínimo de <strong>9.48e-6</strong>.
-                                Las oscilaciones se deben a la aleatoriedad de las condiciones de frontera en cada batch.
-                            </p>
+                            
+                            <!-- Gráfica de error -->
+                            <div class="plot-container" style="margin-top: 20px;" id="errorPlotContainer">
+                                <div id="errorPlot" style="width:100%; height:250px;"></div>
+                            </div>
+                            
+                            <!-- Gráfica de entrenamiento -->
+                            <div class="training-plot">
+                                <h3 style="color: var(--accent-primary); margin-bottom: 15px;">📉 Evolución del Entrenamiento (5000 épocas)</h3>
+                                <div id="trainingPlot" style="width:100%; height:300px;"></div>
+                                <p style="color: var(--text-secondary); margin-top: 15px;">
+                                    Pérdida final: <strong>0.00235951</strong> | Mínimo: <strong>0.00000948</strong>
+                                </p>
+                            </div>
                         </div>
                     </div>
                 </div>
 
                 <!-- Resultados y Análisis -->
                 <div class="project-section">
-                    <h2>📊 Resultados y Análisis</h2>
-                    
-                    <p>Los resultados del entrenamiento real muestran:</p>
+                    <h2>📊 Resultados del Modelo Real</h2>
                     
                     <ul style="color: var(--text-secondary); margin-left: 20px;">
-                        <li><strong>Error relativo promedio:</strong> &lt; 1% para la mayoría de configuraciones dentro del rango de entrenamiento [-20, 50]</li>
-                        <li><strong>Tiempo de inferencia:</strong> ~0.01 segundos por predicción (vs minutos para métodos numéricos tradicionales)</li>
-                        <li><strong>Pérdida final:</strong> 2.36e-3 después de 5000 épocas</li>
-                        <li><strong>Mejor pérdida:</strong> 9.48e-6 durante el entrenamiento</li>
+                        <li><strong>Error promedio:</strong> ~1e-5 (prácticamente la solución exacta)</li>
+                        <li><strong>Pérdida final:</strong> 0.00235951</li>
+                        <li><strong>Mejor pérdida:</strong> 0.00000948</li>
+                        <li><strong>Tiempo de entrenamiento:</strong> 21 segundos</li>
                     </ul>
-
-                    <h3>Observaciones importantes:</h3>
-                    <ul style="color: var(--text-secondary); margin-left: 20px;">
-                        <li>El error es prácticamente nulo en las fronteras (x=0 y x=1) gracias a la imposición exacta de condiciones</li>
-                        <li>El mayor error se concentra en la región intermedia del dominio</li>
-                        <li>Las oscilaciones en el entrenamiento se deben a la aleatoriedad de las condiciones de frontera en cada batch</li>
-                        <li>El modelo generaliza bien para condiciones dentro del rango de entrenamiento [-20, 50]</li>
-                    </ul>
-                </div>
-
-                <!-- Aplicaciones futuras -->
-                <div class="project-section">
-                    <h2>🚀 Aplicaciones Futuras</h2>
-                    <p>Este trabajo tiene potencial para aplicarse en:</p>
-                    <ul style="color: var(--text-secondary); margin-left: 20px;">
-                        <li><strong>Ingeniería:</strong> Simulación de transferencia de calor en geometrías complejas</li>
-                        <li><strong>Diseño industrial:</strong> Optimización de sistemas de enfriamiento</li>
-                        <li><strong>Investigación:</strong> Extensión a ecuaciones más complejas (Navier-Stokes, Schrödinger) y problemas inversos</li>
-                        <li><strong>Educación:</strong> Herramienta didáctica para visualizar soluciones de EDPs</li>
-                    </ul>
-                </div>
-
-                <!-- Enlaces -->
-                <div class="project-section" style="text-align: center;">
-                    <h2>🔗 Enlaces</h2>
-                    <div class="btn-group">
-                        <a href="https://github.com/tuusuario/pinn-variable-bc" target="_blank" class="btn btn-primary">
-                            <i class="fab fa-github"></i> Ver código en GitHub
-                        </a>
-                        <a href="#" class="btn btn-secondary">
-                            <i class="fas fa-file-pdf"></i> Descargar paper (tesis)
-                        </a>
-                        <a href="https://colab.research.google.com/github/tuusuario/pinn-variable-bc" target="_blank" class="btn btn-secondary">
-                            <i class="fas fa-play"></i> Abrir en Colab
-                        </a>
-                    </div>
-                    <p style="margin-top: 30px; color: var(--text-footer);">
-                        <i class="fas fa-calendar"></i> Última actualización: Marzo 2025
-                    </p>
                 </div>
             </div>
         </div>
@@ -422,178 +372,119 @@
 
     <script src="../../js/loader.js"></script>
     <script>
-        // ===== DATOS REALES DEL ENTRENAMIENTO (del notebook) =====
-        const trainingData = {
-            epochs: [0, 500, 1000, 1500, 2000, 2500, 3000, 3500, 4000, 4500, 5000],
-            losses: [0.02038, 0.00953, 0.46931, 0.00544, 0.05449, 0.23999, 0.04599, 0.19479, 0.00101, 0.00236]
-        };
+        // ===== VARIABLES GLOBALES =====
+        let pinnResults = [];
+        let trainingData = {};
         
-        // ===== GENERAR DATOS DE LA PINN (basados en el modelo real) =====
-        // En lugar de cargar un archivo, generamos los datos basados en la solución exacta
-        // con un pequeño error realista (del orden de 1e-5)
-        
-        const x_vals = Array.from({length: 200}, (_, i) => i / 199);
-        
+        // ===== SOLUCIÓN EXACTA =====
         function solucionExacta(x, T_left, T_right) {
             return T_left * (1 - x) + T_right * x;
         }
         
-        // Generar grilla de predicciones (simulando el modelo real)
-        function generarPredicciones() {
-            console.log("Generando predicciones...");
-            let predicciones = [];
-            
-            // Valores de T_left y T_right (cada 5 unidades)
-            for (let T_left = -20; T_left <= 50; T_left += 5) {
-                for (let T_right = -20; T_right <= 50; T_right += 5) {
-                    // Solución exacta
-                    let T_exact = x_vals.map(x => solucionExacta(x, T_left, T_right));
-                    
-                    // Añadir error realista (basado en el error del modelo ~1e-5)
-                    // El error es máximo en el centro
-                    let T_pinn = T_exact.map((val, i) => {
-                        // Error máximo de ~5e-5 en el centro
-                        let error = 0.00005 * Math.sin(i * Math.PI / 100);
-                        return val + error;
-                    });
-                    
-                    predicciones.push({
-                        T_left: T_left,
-                        T_right: T_right,
-                        x: x_vals,
-                        T_pinn: T_pinn
-                    });
-                }
-            }
-            console.log(`✅ Generadas ${predicciones.length} predicciones`);
-            return predicciones;
-        }
-        
-        const pinnResults = generarPredicciones();
-        
-        // ===== FUNCIÓN PARA ENCONTRAR LA PREDICCIÓN MÁS CERCANA =====
-        function encontrarPrediccionCercana(T_left, T_right) {
-            let mejorMatch = null;
+        // ===== ENCONTRAR PREDICCIÓN MÁS CERCANA =====
+        function encontrarPrediccion(T_left, T_right) {
+            let mejor = null;
             let menorDistancia = Infinity;
             
-            for (let result of pinnResults) {
-                let distancia = Math.abs(result.T_left - T_left) + Math.abs(result.T_right - T_right);
-                if (distancia < menorDistancia) {
-                    menorDistancia = distancia;
-                    mejorMatch = result;
+            for (let pred of pinnResults) {
+                let dist = Math.abs(pred.T_left - T_left) + Math.abs(pred.T_right - T_right);
+                if (dist < menorDistancia) {
+                    menorDistancia = dist;
+                    mejor = pred;
                 }
             }
-            
-            return mejorMatch;
+            return mejor;
         }
         
-        // ===== INTERPOLACIÓN LINEAL =====
-        function interpolarPrediccion(T_left, T_right) {
-            // Buscar los 4 puntos más cercanos
-            let puntos = [];
-            for (let result of pinnResults) {
-                puntos.push({
-                    ...result,
-                    dist: Math.sqrt(Math.pow(result.T_left - T_left, 2) + Math.pow(result.T_right - T_right, 2))
+        // ===== CARGAR DATOS =====
+        async function cargarDatos() {
+            try {
+                // Cargar training_data.json
+                console.log('Cargando training_data.json...');
+                const trainResp = await fetch('../../data/training_data.json');
+                trainingData = await trainResp.json();
+                console.log('✓ training_data.json cargado');
+                
+                // Cargar pinn_predictions.json
+                console.log('Cargando pinn_predictions.json...');
+                const predResp = await fetch('../../data/pinn_predictions.json');
+                pinnResults = await predResp.json();
+                console.log(`✓ pinn_predictions.json cargado (${pinnResults.length} predicciones)`);
+                
+                // Mostrar ejemplo de los datos
+                console.log('Ejemplo de predicción:', pinnResults[0]);
+                
+                // Ocultar loading y mostrar dashboard
+                document.getElementById('loadingIndicator').style.display = 'none';
+                document.getElementById('dashboardContent').style.display = 'block';
+                
+                // Graficar entrenamiento
+                Plotly.newPlot('trainingPlot', [{
+                    x: trainingData.epochs,
+                    y: trainingData.losses,
+                    type: 'scatter',
+                    mode: 'lines+markers',
+                    name: 'Pérdida',
+                    line: { color: '#4da3ff', width: 2 },
+                    marker: { size: 8, color: '#4da3ff' }
+                }], {
+                    title: 'Evolución del Entrenamiento - Escala Log',
+                    xaxis: { title: 'Épocas', gridcolor: 'rgba(255,255,255,0.1)' },
+                    yaxis: { 
+                        title: 'Pérdida', 
+                        type: 'log',
+                        gridcolor: 'rgba(255,255,255,0.1)'
+                    },
+                    plot_bgcolor: 'rgba(0,0,0,0)',
+                    paper_bgcolor: 'rgba(0,0,0,0)',
+                    font: { color: '#cfd8ff' }
                 });
+                
+                // Inicializar dashboard
+                actualizarDashboard();
+                
+            } catch (error) {
+                console.error('Error cargando datos:', error);
+                document.getElementById('loadingIndicator').innerHTML = `
+                    <div style="color: #ff6b6b;">
+                        <i class="fas fa-exclamation-triangle"></i> 
+                        Error: ${error.message}<br>
+                        <button onclick="location.reload()" class="btn btn-secondary" style="margin-top:20px;">
+                            Reintentar
+                        </button>
+                    </div>
+                `;
             }
-            
-            puntos.sort((a, b) => a.dist - b.dist);
-            let cercanos = puntos.slice(0, 4);
-            
-            if (cercanos.length === 0) return null;
-            if (cercanos.length === 1) return cercanos[0];
-            
-            // Interpolación por distancia inversa
-            let pesos = cercanos.map(p => 1 / (p.dist + 0.0001));
-            let sumaPesos = pesos.reduce((a, b) => a + b, 0);
-            
-            let resultadoInterpolado = {
-                T_left: T_left,
-                T_right: T_right,
-                x: cercanos[0].x,
-                T_pinn: cercanos[0].x.map((_, i) => {
-                    let suma = 0;
-                    for (let j = 0; j < cercanos.length; j++) {
-                        suma += cercanos[j].T_pinn[i] * pesos[j];
-                    }
-                    return suma / sumaPesos;
-                })
-            };
-            
-            return resultadoInterpolado;
         }
         
-        // ===== GRÁFICA DE ENTRENAMIENTO =====
-        const trainingTrace = {
-            x: trainingData.epochs,
-            y: trainingData.losses,
-            type: 'scatter',
-            mode: 'lines+markers',
-            name: 'Pérdida',
-            line: { color: '#4da3ff', width: 2 },
-            marker: { size: 8, color: '#4da3ff' }
-        };
-        
-        const trainingLayout = {
-            title: 'Evolución del Entrenamiento - Escala Log (5000 épocas)',
-            xaxis: { title: 'Épocas', gridcolor: 'rgba(255,255,255,0.1)' },
-            yaxis: { 
-                title: 'Pérdida', 
-                type: 'log',
-                gridcolor: 'rgba(255,255,255,0.1)',
-                range: [-5, 0]
-            },
-            plot_bgcolor: 'rgba(0,0,0,0)',
-            paper_bgcolor: 'rgba(0,0,0,0)',
-            font: { color: '#cfd8ff' },
-            showlegend: false
-        };
-        
-        Plotly.newPlot('trainingPlot', [trainingTrace], trainingLayout, {displayModeBar: false});
-        
-        // ===== FUNCIÓN DE ACTUALIZACIÓN DEL DASHBOARD =====
+        // ===== ACTUALIZAR DASHBOARD =====
         function actualizarDashboard() {
-            // Obtener valores de los sliders
+            if (pinnResults.length === 0) return;
+            
             let T_left = parseFloat(document.getElementById('tLeftSlider').value);
             let T_right = parseFloat(document.getElementById('tRightSlider').value);
             let showExact = document.getElementById('showExact').checked;
             let showError = document.getElementById('showError').checked;
             
-            // Actualizar labels
             document.getElementById('tLeftValue').textContent = T_left.toFixed(1);
             document.getElementById('tRightValue').textContent = T_right.toFixed(1);
             
-            // Obtener predicción
-            let pred = interpolarPrediccion(T_left, T_right);
+            // Buscar predicción
+            let pred = encontrarPrediccion(T_left, T_right);
             
             if (!pred) return;
             
-            // Calcular solución exacta
-            let T_exact = pred.x.map(xi => solucionExacta(xi, T_left, T_right));
-            
             // Calcular error
-            let error = pred.T_pinn.map((val, i) => Math.abs(val - T_exact[i]));
+            let error = pred.T_pinn.map((val, i) => Math.abs(val - pred.T_exact[i]));
             let error_max = Math.max(...error);
             let error_mean = error.reduce((a, b) => a + b, 0) / error.length;
             
-            // Calcular error relativo
-            let error_rel = pred.T_pinn.map((val, i) => {
-                return (Math.abs(val - T_exact[i]) / (Math.abs(T_exact[i]) + 1e-10)) * 100;
-            });
-            let rel_max = Math.max(...error_rel);
-            let rel_mean = error_rel.reduce((a, b) => a + b, 0) / error_rel.length;
-            
-            // Actualizar panel de métricas
-            let metricsHtml = `<strong>📈 MÉTRICAS (PINN real - 5000 épocas)</strong>
+            // Actualizar métricas
+            let metricsHtml = `<strong>📈 MÉTRICAS DEL MODELO REAL</strong>
 <span style="display:block; margin:10px 0; border-bottom:1px solid rgba(77,163,255,0.3);"></span>
 Error absoluto:
-• Máximo: ${error_max.toFixed(8)}
-• Promedio: ${error_mean.toFixed(8)}
-
-Error relativo:
-• Máximo: ${rel_max.toFixed(2)}%
-• Promedio: ${rel_mean.toFixed(2)}%
+• Máximo: ${error_max.toExponential(4)}
+• Promedio: ${error_mean.toExponential(4)}
 
 Puntos de interés:
 • x=0.25: ${pred.T_pinn[50].toFixed(4)}
@@ -607,21 +498,19 @@ Condiciones:
             document.getElementById('metricsPanel').innerHTML = metricsHtml;
             
             // Gráfica principal
-            let traces = [];
-            
-            traces.push({
+            let traces = [{
                 x: pred.x,
                 y: pred.T_pinn,
                 type: 'scatter',
                 mode: 'lines',
-                name: 'PINN (5000 épocas)',
+                name: 'PINN (real)',
                 line: { color: '#4da3ff', width: 3 }
-            });
+            }];
             
             if (showExact) {
                 traces.push({
                     x: pred.x,
-                    y: T_exact,
+                    y: pred.T_exact,
                     type: 'scatter',
                     mode: 'lines',
                     name: 'Solución exacta',
@@ -634,75 +523,52 @@ Condiciones:
                 y: [T_left, T_right],
                 type: 'scatter',
                 mode: 'markers',
-                name: 'Condiciones de frontera',
-                marker: { 
-                    color: '#51cf66', 
-                    size: 12,
-                    line: { color: '#ffffff', width: 2 }
-                }
+                name: 'Fronteras',
+                marker: { color: '#51cf66', size: 12, line: { color: 'white', width: 2 } }
             });
             
-            let layout = {
-                title: `PINN - T(0)=${T_left.toFixed(1)}, T(1)=${T_right.toFixed(1)}`,
-                xaxis: { title: 'x', range: [0, 1], gridcolor: 'rgba(255,255,255,0.1)' },
+            Plotly.newPlot('solutionPlot', traces, {
+                title: `T(0)=${T_left.toFixed(1)}, T(1)=${T_right.toFixed(1)}`,
+                xaxis: { title: 'x', gridcolor: 'rgba(255,255,255,0.1)' },
                 yaxis: { title: 'Temperatura', gridcolor: 'rgba(255,255,255,0.1)' },
                 plot_bgcolor: 'rgba(0,0,0,0)',
                 paper_bgcolor: 'rgba(0,0,0,0)',
-                font: { color: '#cfd8ff' },
-                hovermode: 'x unified'
-            };
-            
-            Plotly.newPlot('solutionPlot', traces, layout, {displayModeBar: true});
+                font: { color: '#cfd8ff' }
+            });
             
             // Gráfica de error
             if (showError) {
-                let errorTrace = {
+                Plotly.newPlot('errorPlot', [{
                     x: pred.x,
                     y: error,
                     type: 'scatter',
                     mode: 'lines',
-                    name: 'Error absoluto',
+                    name: 'Error',
                     line: { color: '#ff6b6b', width: 2 },
                     fill: 'tozeroy',
                     fillcolor: 'rgba(255,107,107,0.3)'
-                };
-                
-                let errorLayout = {
-                    title: `Error absoluto - Máximo: ${error_max.toFixed(8)}`,
+                }], {
+                    title: `Error absoluto - Máx: ${error_max.toExponential(4)}`,
                     xaxis: { title: 'x', gridcolor: 'rgba(255,255,255,0.1)' },
                     yaxis: { title: 'Error', gridcolor: 'rgba(255,255,255,0.1)' },
                     plot_bgcolor: 'rgba(0,0,0,0)',
                     paper_bgcolor: 'rgba(0,0,0,0)',
-                    font: { color: '#cfd8ff' },
-                    showlegend: false
-                };
-                
-                Plotly.newPlot('errorPlot', [errorTrace], errorLayout, {displayModeBar: false});
+                    font: { color: '#cfd8ff' }
+                });
                 document.getElementById('errorPlotContainer').style.display = 'block';
             } else {
                 document.getElementById('errorPlotContainer').style.display = 'none';
             }
         }
         
-        // ===== EVENT LISTENERS =====
+        // ===== INICIALIZAR =====
+        document.addEventListener('DOMContentLoaded', cargarDatos);
+        
+        // Event listeners
         document.getElementById('tLeftSlider').addEventListener('input', actualizarDashboard);
         document.getElementById('tRightSlider').addEventListener('input', actualizarDashboard);
         document.getElementById('showExact').addEventListener('change', actualizarDashboard);
         document.getElementById('showError').addEventListener('change', actualizarDashboard);
-        
-        // Inicializar
-        setTimeout(actualizarDashboard, 500);
-        
-        // Smooth scroll
-        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-            anchor.addEventListener('click', function (e) {
-                e.preventDefault();
-                const target = document.querySelector(this.getAttribute('href'));
-                if (target) {
-                    target.scrollIntoView({ behavior: 'smooth' });
-                }
-            });
-        });
     </script>
 </body>
 </html>
