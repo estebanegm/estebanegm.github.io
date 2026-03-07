@@ -604,7 +604,7 @@ Condiciones:
             
             document.getElementById('metricsPanel').innerHTML = metricsHtml;
             
-            // Gráfica principal con leyenda DENTRO de la gráfica
+            // ===== GRÁFICA PRINCIPAL CON LEYENDA INTELIGENTE =====
             let traces = [{
                 x: pred.x,
                 y: pred.T_pinn,
@@ -638,6 +638,40 @@ Condiciones:
                 }
             });
             
+            // Determinar la posición de la leyenda basada en los valores de temperatura
+            let legendPosition;
+            
+            // Si T(0) > T(1) (temperatura decreciente), la curva baja de izquierda a derecha
+            // En este caso, la parte superior izquierda está más despejada
+            if (pred.T_left > pred.T_right) {
+                legendPosition = {
+                    x: 0.02,        // Izquierda
+                    y: 0.98,        // Arriba
+                    xanchor: 'left',
+                    yanchor: 'top'
+                };
+            } 
+            // Si T(0) < T(1) (temperatura creciente), la curva sube de izquierda a derecha
+            // En este caso, la parte superior derecha está más despejada
+            else if (pred.T_left < pred.T_right) {
+                legendPosition = {
+                    x: 0.98,        // Derecha
+                    y: 0.98,        // Arriba
+                    xanchor: 'right',
+                    yanchor: 'top'
+                };
+            }
+            // Si son iguales (línea horizontal), podemos ponerla en cualquier lado
+            // Preferimos izquierda para no interferir con los puntos de frontera
+            else {
+                legendPosition = {
+                    x: 0.02,
+                    y: 0.98,
+                    xanchor: 'left',
+                    yanchor: 'top'
+                };
+            }
+            
             let layout = {
                 title: `T(0)=${pred.T_left.toFixed(1)}, T(1)=${pred.T_right.toFixed(1)}`,
                 xaxis: { 
@@ -653,13 +687,13 @@ Condiciones:
                 paper_bgcolor: 'rgba(0,0,0,0)',
                 font: { color: '#cfd8ff' },
                 hovermode: 'x unified',
-                // Configuración de la leyenda DENTRO de la gráfica
+                // Leyenda con posición inteligente
                 legend: {
-                    x: 0.02,        // Posición horizontal (0 = izquierda, 1 = derecha)
-                    y: 0.98,        // Posición vertical (0 = abajo, 1 = arriba)
-                    xanchor: 'left',  // Anclaje horizontal
-                    yanchor: 'top',   // Anclaje vertical
-                    bgcolor: 'rgba(18, 26, 48, 0.8)',  // Fondo semi-transparente
+                    x: legendPosition.x,
+                    y: legendPosition.y,
+                    xanchor: legendPosition.xanchor,
+                    yanchor: legendPosition.yanchor,
+                    bgcolor: 'rgba(18, 26, 48, 0.8)',
                     bordercolor: 'rgba(77, 163, 255, 0.3)',
                     borderwidth: 1,
                     font: { color: '#ffffff', size: 11 }
