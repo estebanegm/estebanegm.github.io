@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
     <title>PINN Condiciones Variables | Esteban González</title>
     <link rel="stylesheet" href="../../css/styles.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
@@ -77,9 +77,11 @@
             display: flex;
             gap: 15px;
             margin-top: 30px;
+            flex-wrap: wrap;
         }
         .btn-group .btn {
             flex: 1;
+            min-width: 200px;
             text-align: center;
         }
         
@@ -172,6 +174,7 @@
             line-height: 1.8;
             white-space: pre-wrap;
             border: 1px solid rgba(77, 163, 255, 0.2);
+            height: fit-content;
         }
         
         .metrics-panel strong {
@@ -190,6 +193,14 @@
             border-radius: 15px;
             padding: 20px;
             border: 1px solid rgba(77, 163, 255, 0.2);
+            width: 100%;
+            overflow: hidden;
+        }
+        
+        .plot-container .js-plotly-plot,
+        .plot-container .plotly {
+            width: 100% !important;
+            max-width: 100% !important;
         }
         
         .training-plot {
@@ -206,6 +217,7 @@
             color: var(--text-secondary);
         }
         
+        /* Responsive */
         @media (max-width: 968px) {
             .dashboard-layout {
                 grid-template-columns: 1fr;
@@ -219,6 +231,33 @@
             .btn-group {
                 flex-direction: column;
             }
+            .btn-group .btn {
+                width: 100%;
+            }
+            .dashboard-container {
+                padding: 15px;
+            }
+            .plot-container {
+                padding: 10px;
+            }
+            .metrics-panel {
+                margin-top: 0;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .project-header h1 {
+                font-size: 1.8rem;
+            }
+            .project-section {
+                padding: 20px;
+            }
+            .slider-container label {
+                font-size: 0.9rem;
+            }
+            .checkbox-group {
+                gap: 15px;
+            }
         }
     </style>
 </head>
@@ -231,58 +270,16 @@
         <div class="project-header">
             <div class="container">
                 <h1>PINN con Condiciones de Frontera Variables</h1>
-                <p class="project-subtitle">Extensión de tesis: Red Neuronal Físicamente Informada para ecuación de calor 1D</p>
+                <p class="project-subtitle">Extensión de tesis: Red Neuronal Físicamente Informada</p>
             </div>
         </div>
 
         <div class="project-content">
             <div class="container">
-                <!-- Descripción general -->
-                <div class="project-section">
-                    <h2>📖 Descripción del Proyecto</h2>
-                    <p>Partiendo de mi tesis de licenciatura <em>"Solución de la ecuación de calor unidimensional estacionaria empleando una red neuronal físicamente informada"</em>, desarrollé una extensión que permite resolver la misma ecuación pero con condiciones de frontera arbitrarias (variables en el tiempo y en el espacio).</p>
-                    
-                    <p>Las Redes Neuronales Físicamente Informadas (PINNs) son una técnica innovadora que incorpora las leyes físicas directamente en la función de pérdida de la red, permitiendo resolver ecuaciones diferenciales parciales sin necesidad de datos de entrenamiento extensivos.</p>
-
-                    <div class="tech-tags">
-                        <span class="tech-tag">Python</span>
-                        <span class="tech-tag">PyTorch</span>
-                        <span class="tech-tag">NumPy</span>
-                        <span class="tech-tag">Matplotlib</span>
-                        <span class="tech-tag">Ecuaciones Diferenciales</span>
-                        <span class="tech-tag">Machine Learning</span>
-                    </div>
-                </div>
-
-                <!-- Metodología -->
-                <div class="project-section">
-                    <h2>🔬 Metodología</h2>
-                    
-                    <h3>Arquitectura de la Red</h3>
-                    <p>La arquitectura PINN incorpora la ecuación de calor como término de pérdida en la función de costo. Implementé una capa de entrada que parametriza las condiciones de frontera, permitiendo que la red generalice a múltiples escenarios sin necesidad de reentrenamiento completo.</p>
-
-                    <div class="code-block">
-                        <pre><code>class HeatPINN(nn.Module):
-    def __init__(self):
-        super().__init__()
-        self.net = nn.Sequential(
-            nn.Linear(1, 50), nn.Tanh(),
-            nn.Linear(50, 50), nn.Tanh(),
-            nn.Linear(50, 50), nn.Tanh(),
-            nn.Linear(50, 1)
-        )
-    
-    def forward(self, x, T_left, T_right):
-        D = x * (1 - x)
-        N = self.net(x)
-        return T_left * (1 - x) + T_right * x + D * N</code></pre>
-                    </div>
-                </div>
-
-                <!-- Dashboard Interactivo con DATOS REALES -->
+                <!-- Dashboard Interactivo -->
                 <div class="project-section">
                     <h2>📊 Dashboard Interactivo - Resultados Reales</h2>
-                    <p>Los datos mostrados son predicciones DIRECTAS del modelo entrenado en PyTorch (5000 épocas).</p>
+                    <p>Datos directos del modelo entrenado en PyTorch (5000 épocas).</p>
                     
                     <div class="dashboard-container">
                         <div id="loadingIndicator" class="loading">
@@ -342,7 +339,7 @@
                             
                             <!-- Gráfica de entrenamiento -->
                             <div class="training-plot">
-                                <h3 style="color: var(--accent-primary); margin-bottom: 15px;">📉 Evolución del Entrenamiento (5000 épocas)</h3>
+                                <h3 style="color: var(--accent-primary); margin-bottom: 15px;">📉 Evolución del Entrenamiento</h3>
                                 <div id="trainingPlot" style="width:100%; height:300px;"></div>
                                 <p style="color: var(--text-secondary); margin-top: 15px;">
                                     Pérdida final: <strong>0.00235951</strong> | Mínimo: <strong>0.00000948</strong>
@@ -350,18 +347,6 @@
                             </div>
                         </div>
                     </div>
-                </div>
-
-                <!-- Resultados y Análisis -->
-                <div class="project-section">
-                    <h2>📊 Resultados del Modelo Real</h2>
-                    
-                    <ul style="color: var(--text-secondary); margin-left: 20px;">
-                        <li><strong>Error promedio:</strong> ~1e-5 (prácticamente la solución exacta)</li>
-                        <li><strong>Pérdida final:</strong> 0.00235951</li>
-                        <li><strong>Mejor pérdida:</strong> 0.00000948</li>
-                        <li><strong>Tiempo de entrenamiento:</strong> 21 segundos</li>
-                    </ul>
                 </div>
             </div>
         </div>
@@ -375,43 +360,51 @@
         // ===== VARIABLES GLOBALES =====
         let pinnResults = [];
         let trainingData = {};
-        
+        let currentPlotWidth = 0;
+
         // ===== SOLUCIÓN EXACTA =====
         function solucionExacta(x, T_left, T_right) {
-            return T_left * (1 - x) + T_right * x;
+            return x.map(xi => T_left * (1 - xi) + T_right * xi);
         }
-        
-        // ===== ENCONTRAR PREDICCIÓN MÁS CERCANA =====
-        function encontrarPrediccion(T_left, T_right) {
-            let mejor = null;
-            let menorDistancia = Infinity;
-            
+
+        // ===== ENCONTRAR PREDICCIÓN EXACTA (no interpolada) =====
+        function encontrarPrediccionExacta(T_left, T_right) {
+            // Buscar una predicción que coincida EXACTAMENTE con los valores
             for (let pred of pinnResults) {
-                let dist = Math.abs(pred.T_left - T_left) + Math.abs(pred.T_right - T_right);
-                if (dist < menorDistancia) {
-                    menorDistancia = dist;
-                    mejor = pred;
+                // Redondear a 1 decimal para comparar con los sliders
+                let predLeft = Math.round(pred.T_left * 10) / 10;
+                let predRight = Math.round(pred.T_right * 10) / 10;
+                let targetLeft = Math.round(T_left * 10) / 10;
+                let targetRight = Math.round(T_right * 10) / 10;
+                
+                if (Math.abs(predLeft - targetLeft) < 0.1 && Math.abs(predRight - targetRight) < 0.1) {
+                    return pred;
                 }
             }
-            return mejor;
+            return null;
         }
-        
+
         // ===== CARGAR DATOS =====
         async function cargarDatos() {
             try {
+                console.log('Cargando datos...');
+                
                 // Cargar training_data.json
-                console.log('Cargando training_data.json...');
                 const trainResp = await fetch('../../data/training_data.json');
+                if (!trainResp.ok) throw new Error('No se pudo cargar training_data.json');
                 trainingData = await trainResp.json();
                 console.log('✓ training_data.json cargado');
                 
                 // Cargar pinn_predictions.json
-                console.log('Cargando pinn_predictions.json...');
                 const predResp = await fetch('../../data/pinn_predictions.json');
+                if (!predResp.ok) throw new Error('No se pudo cargar pinn_predictions.json');
                 pinnResults = await predResp.json();
                 console.log(`✓ pinn_predictions.json cargado (${pinnResults.length} predicciones)`);
                 
-                // Mostrar ejemplo de los datos
+                // Verificar que tenemos datos
+                if (pinnResults.length === 0) throw new Error('No hay predicciones');
+                
+                // Mostrar ejemplo
                 console.log('Ejemplo de predicción:', pinnResults[0]);
                 
                 // Ocultar loading y mostrar dashboard
@@ -428,23 +421,30 @@
                     line: { color: '#4da3ff', width: 2 },
                     marker: { size: 8, color: '#4da3ff' }
                 }], {
-                    title: 'Evolución del Entrenamiento - Escala Log',
-                    xaxis: { title: 'Épocas', gridcolor: 'rgba(255,255,255,0.1)' },
+                    title: 'Evolución del Entrenamiento',
+                    xaxis: { 
+                        title: 'Épocas',
+                        gridcolor: 'rgba(255,255,255,0.1)',
+                        fixedrange: true
+                    },
                     yaxis: { 
-                        title: 'Pérdida', 
+                        title: 'Pérdida',
                         type: 'log',
-                        gridcolor: 'rgba(255,255,255,0.1)'
+                        gridcolor: 'rgba(255,255,255,0.1)',
+                        fixedrange: true
                     },
                     plot_bgcolor: 'rgba(0,0,0,0)',
                     paper_bgcolor: 'rgba(0,0,0,0)',
-                    font: { color: '#cfd8ff' }
+                    font: { color: '#cfd8ff' },
+                    autosize: true,
+                    responsive: true
                 });
                 
                 // Inicializar dashboard
                 actualizarDashboard();
                 
             } catch (error) {
-                console.error('Error cargando datos:', error);
+                console.error('Error:', error);
                 document.getElementById('loadingIndicator').innerHTML = `
                     <div style="color: #ff6b6b;">
                         <i class="fas fa-exclamation-triangle"></i> 
@@ -456,7 +456,7 @@
                 `;
             }
         }
-        
+
         // ===== ACTUALIZAR DASHBOARD =====
         function actualizarDashboard() {
             if (pinnResults.length === 0) return;
@@ -466,11 +466,28 @@
             let showExact = document.getElementById('showExact').checked;
             let showError = document.getElementById('showError').checked;
             
-            document.getElementById('tLeftValue').textContent = T_left.toFixed(1);
-            document.getElementById('tRightValue').textContent = T_right.toFixed(1);
+            // Redondear a 1 decimal para mostrar
+            let T_left_rounded = Math.round(T_left * 10) / 10;
+            let T_right_rounded = Math.round(T_right * 10) / 10;
             
-            // Buscar predicción
-            let pred = encontrarPrediccion(T_left, T_right);
+            document.getElementById('tLeftValue').textContent = T_left_rounded.toFixed(1);
+            document.getElementById('tRightValue').textContent = T_right_rounded.toFixed(1);
+            
+            // Buscar predicción exacta
+            let pred = encontrarPrediccionExacta(T_left_rounded, T_right_rounded);
+            
+            if (!pred) {
+                console.warn('No hay predicción exacta para:', T_left_rounded, T_right_rounded);
+                // Buscar la más cercana como fallback
+                let menorDistancia = Infinity;
+                for (let p of pinnResults) {
+                    let dist = Math.abs(p.T_left - T_left_rounded) + Math.abs(p.T_right - T_right_rounded);
+                    if (dist < menorDistancia) {
+                        menorDistancia = dist;
+                        pred = p;
+                    }
+                }
+            }
             
             if (!pred) return;
             
@@ -479,6 +496,13 @@
             let error_max = Math.max(...error);
             let error_mean = error.reduce((a, b) => a + b, 0) / error.length;
             
+            // Calcular error relativo
+            let error_rel = pred.T_pinn.map((val, i) => {
+                return (Math.abs(val - pred.T_exact[i]) / (Math.abs(pred.T_exact[i]) + 1e-10)) * 100;
+            });
+            let rel_max = Math.max(...error_rel);
+            let rel_mean = error_rel.reduce((a, b) => a + b, 0) / error_rel.length;
+            
             // Actualizar métricas
             let metricsHtml = `<strong>📈 MÉTRICAS DEL MODELO REAL</strong>
 <span style="display:block; margin:10px 0; border-bottom:1px solid rgba(77,163,255,0.3);"></span>
@@ -486,16 +510,28 @@ Error absoluto:
 • Máximo: ${error_max.toExponential(4)}
 • Promedio: ${error_mean.toExponential(4)}
 
-Puntos de interés:
+Error relativo:
+• Máximo: ${rel_max.toFixed(3)}%
+• Promedio: ${rel_mean.toFixed(3)}%
+
+Valores en puntos específicos:
 • x=0.25: ${pred.T_pinn[50].toFixed(4)}
 • x=0.50: ${pred.T_pinn[100].toFixed(4)}
 • x=0.75: ${pred.T_pinn[150].toFixed(4)}
 
-Condiciones:
-• T(0) = ${T_left.toFixed(2)}
-• T(1) = ${T_right.toFixed(2)}`;
+Condiciones actuales:
+• T(0) = ${T_left_rounded.toFixed(1)}
+• T(1) = ${T_right_rounded.toFixed(1)}`;
             
             document.getElementById('metricsPanel').innerHTML = metricsHtml;
+            
+            // Configuración común para las gráficas
+            const plotConfig = {
+                responsive: true,
+                displayModeBar: true,
+                displaylogo: false,
+                modeBarButtonsToRemove: ['zoom2d', 'pan2d', 'select2d', 'lasso2d', 'zoomIn2d', 'zoomOut2d', 'autoScale2d', 'resetScale2d']
+            };
             
             // Gráfica principal
             let traces = [{
@@ -520,21 +556,38 @@ Condiciones:
             
             traces.push({
                 x: [0, 1],
-                y: [T_left, T_right],
+                y: [T_left_rounded, T_right_rounded],
                 type: 'scatter',
                 mode: 'markers',
                 name: 'Fronteras',
-                marker: { color: '#51cf66', size: 12, line: { color: 'white', width: 2 } }
+                marker: { 
+                    color: '#51cf66', 
+                    size: 12, 
+                    line: { color: 'white', width: 2 }
+                }
             });
             
-            Plotly.newPlot('solutionPlot', traces, {
-                title: `T(0)=${T_left.toFixed(1)}, T(1)=${T_right.toFixed(1)}`,
-                xaxis: { title: 'x', gridcolor: 'rgba(255,255,255,0.1)' },
-                yaxis: { title: 'Temperatura', gridcolor: 'rgba(255,255,255,0.1)' },
+            let layout = {
+                title: `T(0)=${T_left_rounded.toFixed(1)}, T(1)=${T_right_rounded.toFixed(1)}`,
+                xaxis: { 
+                    title: 'x', 
+                    range: [0, 1],
+                    gridcolor: 'rgba(255,255,255,0.1)',
+                    fixedrange: true
+                },
+                yaxis: { 
+                    title: 'Temperatura',
+                    gridcolor: 'rgba(255,255,255,0.1)',
+                    fixedrange: false
+                },
                 plot_bgcolor: 'rgba(0,0,0,0)',
                 paper_bgcolor: 'rgba(0,0,0,0)',
-                font: { color: '#cfd8ff' }
-            });
+                font: { color: '#cfd8ff' },
+                autosize: true,
+                margin: { l: 50, r: 30, t: 50, b: 50 }
+            };
+            
+            Plotly.newPlot('solutionPlot', traces, layout, plotConfig);
             
             // Gráfica de error
             if (showError) {
@@ -549,26 +602,47 @@ Condiciones:
                     fillcolor: 'rgba(255,107,107,0.3)'
                 }], {
                     title: `Error absoluto - Máx: ${error_max.toExponential(4)}`,
-                    xaxis: { title: 'x', gridcolor: 'rgba(255,255,255,0.1)' },
-                    yaxis: { title: 'Error', gridcolor: 'rgba(255,255,255,0.1)' },
+                    xaxis: { 
+                        title: 'x', 
+                        range: [0, 1],
+                        gridcolor: 'rgba(255,255,255,0.1)',
+                        fixedrange: true
+                    },
+                    yaxis: { 
+                        title: 'Error',
+                        gridcolor: 'rgba(255,255,255,0.1)',
+                        fixedrange: false
+                    },
                     plot_bgcolor: 'rgba(0,0,0,0)',
                     paper_bgcolor: 'rgba(0,0,0,0)',
-                    font: { color: '#cfd8ff' }
-                });
+                    font: { color: '#cfd8ff' },
+                    autosize: true,
+                    margin: { l: 50, r: 30, t: 50, b: 50 }
+                }, plotConfig);
+                
                 document.getElementById('errorPlotContainer').style.display = 'block';
             } else {
                 document.getElementById('errorPlotContainer').style.display = 'none';
             }
         }
-        
+
         // ===== INICIALIZAR =====
         document.addEventListener('DOMContentLoaded', cargarDatos);
         
-        // Event listeners
-        document.getElementById('tLeftSlider').addEventListener('input', actualizarDashboard);
-        document.getElementById('tRightSlider').addEventListener('input', actualizarDashboard);
+        // Event listeners con debounce para evitar actualizaciones excesivas
+        let timeoutId;
+        function debouncedUpdate() {
+            clearTimeout(timeoutId);
+            timeoutId = setTimeout(actualizarDashboard, 50);
+        }
+        
+        document.getElementById('tLeftSlider').addEventListener('input', debouncedUpdate);
+        document.getElementById('tRightSlider').addEventListener('input', debouncedUpdate);
         document.getElementById('showExact').addEventListener('change', actualizarDashboard);
         document.getElementById('showError').addEventListener('change', actualizarDashboard);
+        
+        // Ajustar al cambiar tamaño de ventana
+        window.addEventListener('resize', debouncedUpdate);
     </script>
 </body>
 </html>
