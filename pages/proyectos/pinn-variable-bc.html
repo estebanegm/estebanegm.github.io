@@ -478,34 +478,73 @@
             return T_left * (1 - x) + T_right * x;
         }
 
-        // ===== ENCONTRAR PREDICCIÓN MÁS CERCANA =====
+        // ===== ENCONTRAR PREDICCIÓN CON INTERPOLACIÓN =====
         function encontrarPrediccion(T_left, T_right) {
             if (!pinnResults || pinnResults.length === 0) return null;
             
-            // Redondear a 1 decimal para comparar
+            // Redondear a 1 decimal (como están los sliders)
             T_left = Math.round(T_left * 10) / 10;
             T_right = Math.round(T_right * 10) / 10;
             
-            // Buscar coincidencia exacta primero
-            for (let pred of pinnResults) {
-                if (Math.abs(pred.T_left - T_left) < 0.1 && Math.abs(pred.T_right - T_right) < 0.1) {
-                    return pred;
-                }
-            }
+            console.log(`Buscando predicción para: T_left=${T_left}, T_right=${T_right}`);
             
-            // Si no hay coincidencia exacta, buscar la más cercana
-            let mejor = null;
-            let menorDistancia = Infinity;
+            // Buscar los puntos más cercanos para interpolar
+            let puntos = [];
             
             for (let pred of pinnResults) {
-                let dist = Math.abs(pred.T_left - T_left) + Math.abs(pred.T_right - T_right);
-                if (dist < menorDistancia) {
-                    menorDistancia = dist;
-                    mejor = pred;
-                }
+                let dist = Math.sqrt(
+                    Math.pow(pred.T_left - T_left, 2) + 
+                    Math.pow(pred.T_right - T_right, 2)
+                );
+                puntos.push({
+                    ...pred,
+                    dist: dist
+                });
             }
             
-            return mejor;
+            // Ordenar por distancia
+            puntos.sort((a, b) => a.dist - b.dist);
+            
+            // Tomar los 4 más cercanos
+            let cercanos = puntos.slice(0, 4);
+            
+            if (cercanos.length === 0) return null;
+            
+            // Si hay una coincidencia exacta o muy cercana (dist < 0.1), usarla directamente
+            if (cercanos[0].dist < 0.1) {
+                console.log(`✓ Coincidencia encontrada: dist=${cercanos[0].dist.toFixed(4)}`);
+                return cercanos[0];
+            }
+            
+            // Interpolación por distancia inversa (más precisa)
+            console.log(`⚠️ Usando interpolación con ${cercanos.length} puntos`);
+            
+            // Calcular pesos (inverso de la distancia)
+            let pesos = cercanos.map(p => 1 / (p.dist + 1e-10));
+            let sumaPesos = pesos.reduce((a, b) => a + b, 0);
+            
+            // Crear resultado interpolado
+            let resultadoInterpolado = {
+                T_left: T_left,
+                T_right: T_right,
+                x: cercanos[0].x,
+                T_pinn: cercanos[0].x.map((_, i) => {
+                    let suma = 0;
+                    for (let j = 0; j < cercanos.length; j++) {
+                        suma += cercanos[j].T_pinn[i] * pesos[j];
+                    }
+                    return suma / sumaPesos;
+                }),
+                T_exact: cercanos[0].x.map((_, i) => {
+                    let suma = 0;
+                    for (let j = 0; j < cercanos.length; j++) {
+                        suma += cercanos[j].T_exact[i] * pesos[j];
+                    }
+                    return suma / sumaPesos;
+                })
+            };
+            
+            return resultadoInterpolado;
         }
 
         // ===== CARGAR DATOS =====
@@ -594,35 +633,45 @@
             
             document.getElementById('tLeftValue').textContent = T_left_display.toFixed(1);
             document.getElementById('tRightValue').textContent = T_right_display.toFixed(1);
-            
+
             // Buscar predicción
             let pred = encontrarPrediccion(T_left, T_right);
-            
+
+            // ===== CÓDIGO DE DEPURACIÓN =====
+            console.log('Slider values:', T_left, T_right);
+            let pred = encontrarPrediccion(T_left, T_right);
+            if (pred) {
+                console.log('Predicción encontrada:', pred.T_left, pred.T_right);
+            } else {
+                console.warn('No se encontró predicción');
+            }
+            // ===== FIN CÓDIGO DE DEPURACIÓN =====
             if (!pred) {
                 console.warn('No se encontró predicción para:', T_left, T_right);
                 return;
             }
+
             
             // Calcular error
             let error = pred.T_pinn.map((val, i) => Math.abs(val - pred.T_exact[i]));
             let error_max = Math.max(...error);
             let error_mean = error.reduce((a, b) => a + b, 0) / error.length;
-            
-            // Actualizar métricas
-            let metricsHtml = `<strong>📈 MÉTRICAS DEL MODELO </strong>
-<span style="display:block; margin:10px 0; border-bottom:1px solid rgba(77,163,255,0.3);"></span>
-Error absoluto:
-• Máximo: ${error_max.toExponential(4)}
-• Promedio: ${error_mean.toExponential(4)}
 
-Puntos de interés:
-• x=0.25: T= ${pred.T_pinn[50].toFixed(4)}
-• x=0.50: T= ${pred.T_pinn[100].toFixed(4)}
-• x=0.75: T= ${pred.T_pinn[150].toFixed(4)}
+            // Actualizar métricas con los valores REALES de la predicción
+            let metricsHtml = `<strong> MÉTRICAS DEL MODELO</strong>
+            <span style="display:block; margin:10px 0; border-bottom:1px solid rgba(77,163,255,0.3);"></span>
+            Error absoluto:
+            • Máximo: ${error_max.toExponential(4)}
+            • Promedio: ${error_mean.toExponential(4)}
 
-Condiciones:
-• T(0) = ${T_left_display.toFixed(1)}
-• T(1) = ${T_right_display.toFixed(1)}`;
+            Puntos de interés:
+            • x=0.25: T= ${pred.T_pinn[50].toFixed(4)}
+            • x=0.50: T= ${pred.T_pinn[100].toFixed(4)}
+            • x=0.75: T= ${pred.T_pinn[150].toFixed(4)}
+
+            Condiciones:
+            • T(0) = ${T_left_display.toFixed(1)}
+            • T(1) = ${T_right_display.toFixed(1)}`;
             
             document.getElementById('metricsPanel').innerHTML = metricsHtml;
             
@@ -747,7 +796,7 @@ Condiciones:
             
             traces.push({
                 x: [0, 1],
-                y: [pred.T_left, pred.T_right],
+                y: [pred.T_left, pred.T_right],  // Estos son los valores reales de la predicción
                 type: 'scatter',
                 mode: 'markers',
                 name: 'Condiciones de frontera',
