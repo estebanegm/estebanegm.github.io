@@ -633,50 +633,51 @@
             
             document.getElementById('tLeftValue').textContent = T_left_display.toFixed(1);
             document.getElementById('tRightValue').textContent = T_right_display.toFixed(1);
-
+            
             // Buscar predicción
             let pred = encontrarPrediccion(T_left, T_right);
-
+            
             // ===== CÓDIGO DE DEPURACIÓN =====
             console.log('Slider values:', T_left, T_right);
-            let pred = encontrarPrediccion(T_left, T_right);
             if (pred) {
                 console.log('Predicción encontrada:', pred.T_left, pred.T_right);
+                console.log('Rango x:', pred.x.length, 'puntos');
+                console.log('T_pinn sample:', pred.T_pinn.slice(0, 5));
             } else {
                 console.warn('No se encontró predicción');
             }
             // ===== FIN CÓDIGO DE DEPURACIÓN =====
+            
             if (!pred) {
                 console.warn('No se encontró predicción para:', T_left, T_right);
                 return;
             }
-
             
             // Calcular error
             let error = pred.T_pinn.map((val, i) => Math.abs(val - pred.T_exact[i]));
             let error_max = Math.max(...error);
             let error_mean = error.reduce((a, b) => a + b, 0) / error.length;
-
-            // Actualizar métricas con los valores REALES de la predicción
+            
+            // Actualizar métricas
             let metricsHtml = `<strong> MÉTRICAS DEL MODELO</strong>
-            <span style="display:block; margin:10px 0; border-bottom:1px solid rgba(77,163,255,0.3);"></span>
-            Error absoluto:
-            • Máximo: ${error_max.toExponential(4)}
-            • Promedio: ${error_mean.toExponential(4)}
-
-            Puntos de interés:
-            • x=0.25: T= ${pred.T_pinn[50].toFixed(4)}
-            • x=0.50: T= ${pred.T_pinn[100].toFixed(4)}
-            • x=0.75: T= ${pred.T_pinn[150].toFixed(4)}
-
-            Condiciones:
-            • T(0) = ${T_left_display.toFixed(1)}
-            • T(1) = ${T_right_display.toFixed(1)}`;
+        <span style="display:block; margin:10px 0; border-bottom:1px solid rgba(77,163,255,0.3);"></span>
+        Error absoluto:
+        • Máximo: ${error_max.toExponential(4)}
+        • Promedio: ${error_mean.toExponential(4)}
+        
+        Puntos de interés:
+        • x=0.25: T= ${pred.T_pinn[50].toFixed(4)}
+        • x=0.50: T= ${pred.T_pinn[100].toFixed(4)}
+        • x=0.75: T= ${pred.T_pinn[150].toFixed(4)}
+        
+        Condiciones:
+        • T(0) = ${T_left_display.toFixed(1)}
+        • T(1) = ${T_right_display.toFixed(1)}`;
             
             document.getElementById('metricsPanel').innerHTML = metricsHtml;
             
             // ===== GRÁFICA PRINCIPAL CON LEYENDA INTELIGENTE =====
-
+        
             // Función para encontrar la mejor posición de la leyenda
             function encontrarMejorPosicionLegend(pred) {
                 // Definir las 4 posibles posiciones para la leyenda
@@ -796,7 +797,7 @@
             
             traces.push({
                 x: [0, 1],
-                y: [pred.T_left, pred.T_right],  // Estos son los valores reales de la predicción
+                y: [pred.T_left, pred.T_right],
                 type: 'scatter',
                 mode: 'markers',
                 name: 'Condiciones de frontera',
