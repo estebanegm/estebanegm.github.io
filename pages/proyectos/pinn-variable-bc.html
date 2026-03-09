@@ -8,7 +8,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <script src="https://cdn.plot.ly/plotly-2.27.0.min.js"></script>
-    <style>
+    <style>  
         .project-header {
             background: linear-gradient(135deg, var(--gradient-start), var(--gradient-end));
             padding: 120px 0 60px;
@@ -258,7 +258,7 @@
         <div class="project-header">
             <div class="container">
                 <h1>PINN con Condiciones de Frontera Variables</h1>
-                <p class="project-subtitle">Extensión de tesis: Red Neuronal Físicamente Informada para ecuación de calor 1D</p>
+                <p class="project-subtitle">Extensión de tesis: Solución de la ecuación de calor unidimensional estacionaria empleando una red neuronal físicamente informada</p>
             </div>
         </div>
 
@@ -267,9 +267,12 @@
                 <!-- Descripción general -->
                 <div class="project-section">
                     <h2>📖 Descripción del Proyecto</h2>
-                    <p>Partiendo de mi tesis de licenciatura <em>"Solución de la ecuación de calor unidimensional estacionaria empleando una red neuronal físicamente informada"</em>, desarrollé una extensión que permite resolver la misma ecuación pero con condiciones de frontera arbitrarias (variables en el tiempo y en el espacio).</p>
+                    <p>Partiendo de mi tesis de licenciatura <em>"Solución de la ecuación de calor unidimensional estacionaria empleando una red neuronal físicamente informada"</em>, desarrollé una extensión que permite resolver la misma ecuación pero con condiciones de frontera variables en un rango determinado.</p>
                     
-                    <p>Las Redes Neuronales Físicamente Informadas (PINNs) son una técnica innovadora que incorpora las leyes físicas directamente en la función de pérdida de la red, permitiendo resolver ecuaciones diferenciales parciales sin necesidad de datos de entrenamiento extensivos.</p>
+                    <p>Las Physics-Informed Neural Networks (PINNs) son redes neuronales que integran leyes físicas en su entrenamiento. En lugar de aprender únicamente a partir de datos (como una red convencional), las PINN incorporan la ecuación diferencial que gobierna el fenómeno como parte de la función de pérdida. Esto permite entrenar sin datos de solución, garantizar la consistencia física del problema y generalizar a nuevas condiciones de frontera sin reentrenar la red.</li>
+                        </ul>  
+                    </p>
+                    
 
                     <div class="tech-tags">
                         <span class="tech-tag">Python</span>
@@ -308,12 +311,20 @@
                     <h3>Innovación Principal</h3>
                     <p>La clave de esta extensión es que la red aprende a resolver la ecuación para <strong>cualquier condición de frontera</strong> dentro de un rango definido. Esto se logra alimentando a la red no solo con las coordenadas espaciales, sino también con los valores de frontera como entradas adicionales durante el entrenamiento.</p>
                     
-                    <p>El modelo fue entrenado durante <strong>5000 épocas</strong> con condiciones de frontera aleatorias entre -20 y 50, logrando una pérdida final de <strong>2.36e-3</strong> y un mínimo de <strong>9.48e-6</strong>.</p>
+                    <div class="training-plot">
+                        <h3 style="color: var(--accent-primary); margin-bottom: 15px;">📉 Evolución del Entrenamiento (5000 épocas)</h3>
+                        <div id="trainingPlot" style="width:100%; height:300px;"></div>
+                        <p style="color: var(--text-secondary); margin-top: 15px; font-size:0.9rem;">
+                            El modelo fue entrenado durante <strong>5000 épocas</strong> con condiciones de frontera aleatorias entre -20 y 50, logrando una pérdida final de <strong>2.36e-3</strong> y un mínimo de <strong>9.48e-6</strong>.
+                            Las oscilaciones se deben a la aleatoriedad de las condiciones de frontera en cada batch.
+                        </p>
+                    </div>
+
                 </div>
 
                 <!-- Dashboard Interactivo -->
                 <div class="project-section">
-                    <h2>📊 Dashboard Interactivo - Resultados Reales</h2>
+                    <h2>📊 PINN Interactiva</h2>
                     <p>Los datos mostrados son predicciones directas del modelo entrenado en PyTorch (5000 épocas).</p>
                     
                     <div class="dashboard-container">
@@ -324,7 +335,7 @@
                         <div id="dashboardContent" style="display: none;">
                             <!-- Controles -->
                             <div class="controls-panel">
-                                <h3 style="color: var(--accent-primary); margin-bottom: 20px;">🎮 Controles</h3>
+                                <h3 style="color: var(--accent-primary); margin-bottom: 20px;"> Controles</h3>
                                 
                                 <div class="slider-container">
                                     <label>
@@ -373,7 +384,7 @@
                             </div>
                             
                             <!-- Gráfica de entrenamiento -->
-                            <div class="training-plot">
+                            <!--<div class="training-plot">
                                 <h3 style="color: var(--accent-primary); margin-bottom: 15px;">📉 Evolución del Entrenamiento (5000 épocas)</h3>
                                 <div id="trainingPlot" style="width:100%; height:300px;"></div>
                                 <p style="color: var(--text-secondary); margin-top: 15px; font-size:0.9rem;">
@@ -381,7 +392,7 @@
                                     La pérdida final fue de <strong>2.36e-3</strong>, con un mínimo de <strong>9.48e-6</strong>.
                                     Las oscilaciones se deben a la aleatoriedad de las condiciones de frontera en cada batch.
                                 </p>
-                            </div>
+                            </div>-->
                         </div>
                     </div>
                 </div>
@@ -390,7 +401,7 @@
                 <div class="project-section">
                     <h2>📊 Resultados y Análisis</h2>
                     
-                    <p>Los resultados del entrenamiento real muestran:</p>
+                    <p>Los resultados del entrenamiento muestran:</p>
                     
                     <ul style="color: var(--text-secondary); margin-left: 20px;">
                         <li><strong>Error relativo promedio:</strong> &lt; 1% para la mayoría de configuraciones dentro del rango de entrenamiento [-20, 50]</li>
@@ -408,8 +419,17 @@
                     </ul>
                 </div>
 
-                <!-- Aplicaciones futuras -->
                 <div class="project-section">
+                    <h2>⬆️ Mejoras</h2>
+                    <p>Este trabajo aún tiene muchas áreas de mejora, algunas cosas que pretendo mejorar e implementar son:</p>
+                    <ul style="color: var(--text-secondary); margin-left: 20px;">
+                        <li>Extender la ecuación diferencial con su parte temporal y a ecuaciones similares y más complejas</li>
+                        <li>Implementar la PINN con datos de experimentos reales</li>
+                    </ul>
+                </div>
+
+                <!-- Aplicaciones futuras -->
+                <!--<div class="project-section">
                     <h2>🚀 Aplicaciones Futuras</h2>
                     <p>Este trabajo tiene potencial para aplicarse en:</p>
                     <ul style="color: var(--text-secondary); margin-left: 20px;">
@@ -419,23 +439,25 @@
                         <li><strong>Educación:</strong> Herramienta didáctica para visualizar soluciones de EDPs</li>
                     </ul>
                 </div>
+                -->
 
                 <!-- Enlaces -->
                 <div class="project-section" style="text-align: center;">
                     <h2>🔗 Enlaces</h2>
                     <div class="btn-group">
-                        <a href="https://github.com/tuusuario/pinn-variable-bc" target="_blank" class="btn btn-primary">
+                        <!--<a href="https://github.com/tuusuario/pinn-variable-bc" target="_blank" class="btn btn-primary">
                             <i class="fab fa-github"></i> Ver código en GitHub
                         </a>
-                        <a href="#" class="btn btn-secondary">
-                            <i class="fas fa-file-pdf"></i> Descargar paper (tesis)
+                        -->
+                        <a href="https://drive.google.com/file/d/16EWkk98MudYfzPO2dlV_dSPKRJmPjhw7/view?usp=sharing" class="btn btn-secondary">
+                            <i class="fas fa-file-pdf"></i> Descargar tesis
                         </a>
-                        <a href="https://colab.research.google.com/github/tuusuario/pinn-variable-bc" target="_blank" class="btn btn-secondary">
+                        <a href="https://colab.research.google.com/drive/1pB9dIhdLsUzz1cTCKz5qYoqSIZe7vInx?usp=sharing" target="_blank" class="btn btn-secondary">
                             <i class="fas fa-play"></i> Abrir en Colab
                         </a>
                     </div>
                     <p style="margin-top: 30px; color: var(--text-footer);">
-                        <i class="fas fa-calendar"></i> Última actualización: Marzo 2025
+                        <i class="fas fa-calendar"></i> Última actualización: Marzo 2026
                     </p>
                 </div>
             </div>
@@ -587,16 +609,16 @@
             let error_mean = error.reduce((a, b) => a + b, 0) / error.length;
             
             // Actualizar métricas
-            let metricsHtml = `<strong>📈 MÉTRICAS DEL MODELO REAL</strong>
+            let metricsHtml = `<strong>📈 MÉTRICAS DEL MODELO </strong>
 <span style="display:block; margin:10px 0; border-bottom:1px solid rgba(77,163,255,0.3);"></span>
 Error absoluto:
 • Máximo: ${error_max.toExponential(4)}
 • Promedio: ${error_mean.toExponential(4)}
 
 Puntos de interés:
-• x=0.25: ${pred.T_pinn[50].toFixed(4)}
-• x=0.50: ${pred.T_pinn[100].toFixed(4)}
-• x=0.75: ${pred.T_pinn[150].toFixed(4)}
+• x=0.25: T= ${pred.T_pinn[50].toFixed(4)}
+• x=0.50: T= ${pred.T_pinn[100].toFixed(4)}
+• x=0.75: T= ${pred.T_pinn[150].toFixed(4)}
 
 Condiciones:
 • T(0) = ${T_left_display.toFixed(1)}
