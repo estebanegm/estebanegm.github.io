@@ -405,7 +405,7 @@
                     
                     <ul style="color: var(--text-secondary); margin-left: 20px;">
                         <li><strong>Error relativo promedio:</strong> &lt; 1% para la mayoría de configuraciones dentro del rango de entrenamiento [-20, 50]</li>
-                        <li><strong>Tiempo de inferencia:</strong> ~0.01 segundos por predicción (vs minutos para métodos numéricos tradicionales)</li>
+                        <li><strong>Tiempo de inferencia:</strong> ~0.01 segundos por predicción <!--(vs minutos para métodos numéricos tradicionales)</li>-->
                         <li><strong>Pérdida final:</strong> 2.36e-3 después de 5000 épocas</li>
                         <li><strong>Mejor pérdida:</strong> 9.48e-6 durante el entrenamiento</li>
                     </ul>
@@ -661,18 +661,18 @@
             // Actualizar métricas
             let metricsHtml = `<strong> MÉTRICAS DEL MODELO</strong>
         <span style="display:block; margin:10px 0; border-bottom:1px solid rgba(77,163,255,0.3);"></span>
-        Error absoluto:
-        • Máximo: ${error_max.toExponential(4)}
-        • Promedio: ${error_mean.toExponential(4)}
-        
-        Puntos de interés:
-        • x=0.25: T= ${pred.T_pinn[50].toFixed(4)}
-        • x=0.50: T= ${pred.T_pinn[100].toFixed(4)}
-        • x=0.75: T= ${pred.T_pinn[150].toFixed(4)}
-        
-        Condiciones:
-        • T(0) = ${T_left_display.toFixed(1)}
-        • T(1) = ${T_right_display.toFixed(1)}`;
+    Error absoluto:
+    • Máximo: ${error_max.toExponential(4)}
+    • Promedio: ${error_mean.toExponential(4)}
+    
+    Puntos de interés:
+    • x=0.25: T= ${pred.T_pinn[50].toFixed(4)}
+    • x=0.50: T= ${pred.T_pinn[100].toFixed(4)}
+    • x=0.75: T= ${pred.T_pinn[150].toFixed(4)}
+    
+    Condiciones:
+    • T(0) = ${T_left_display.toFixed(1)}
+    • T(1) = ${T_right_display.toFixed(1)}`;
             
             document.getElementById('metricsPanel').innerHTML = metricsHtml;
             
