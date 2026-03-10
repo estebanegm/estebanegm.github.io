@@ -269,10 +269,7 @@
                     <h2>📖 Descripción del Proyecto</h2>
                     <p>Partiendo de mi tesis de licenciatura <em>"Solución de la ecuación de calor unidimensional estacionaria empleando una red neuronal físicamente informada"</em>, desarrollé una extensión que permite resolver la misma ecuación pero con condiciones de frontera variables en un rango determinado.</p>
                     
-                    <p>Las Physics-Informed Neural Networks (PINNs) son redes neuronales que integran leyes físicas en su entrenamiento. En lugar de aprender únicamente a partir de datos (como una red convencional), las PINN incorporan la ecuación diferencial que gobierna el fenómeno como parte de la función de pérdida. Esto permite entrenar sin datos de solución, garantizar la consistencia física del problema y generalizar a nuevas condiciones de frontera sin reentrenar la red.</li>
-                        </ul>  
-                    </p>
-                    
+                    <p>Las Physics-Informed Neural Networks (PINNs) son redes neuronales que integran leyes físicas en su entrenamiento. En lugar de aprender únicamente a partir de datos (como una red convencional), las PINN incorporan la ecuación diferencial que gobierna el fenómeno como parte de la función de pérdida. Esto permite entrenar sin datos de solución, garantizar la consistencia física del problema y generalizar a nuevas condiciones de frontera sin reentrenar la red.</p>
 
                     <div class="tech-tags">
                         <span class="tech-tag">Python</span>
@@ -319,7 +316,6 @@
                             Las oscilaciones se deben a la aleatoriedad de las condiciones de frontera en cada batch.
                         </p>
                     </div>
-
                 </div>
 
                 <!-- Dashboard Interactivo -->
@@ -382,17 +378,6 @@
                             <div class="plot-container" style="margin-top: 20px;" id="errorPlotContainer">
                                 <div id="errorPlot" style="width:100%; height:250px;"></div>
                             </div>
-                            
-                            <!-- Gráfica de entrenamiento -->
-                            <!--<div class="training-plot">
-                                <h3 style="color: var(--accent-primary); margin-bottom: 15px;">📉 Evolución del Entrenamiento (5000 épocas)</h3>
-                                <div id="trainingPlot" style="width:100%; height:300px;"></div>
-                                <p style="color: var(--text-secondary); margin-top: 15px; font-size:0.9rem;">
-                                    El modelo fue entrenado durante <strong>5000 épocas</strong> con condiciones de frontera aleatorias. 
-                                    La pérdida final fue de <strong>2.36e-3</strong>, con un mínimo de <strong>9.48e-6</strong>.
-                                    Las oscilaciones se deben a la aleatoriedad de las condiciones de frontera en cada batch.
-                                </p>
-                            </div>-->
                         </div>
                     </div>
                 </div>
@@ -405,7 +390,7 @@
                     
                     <ul style="color: var(--text-secondary); margin-left: 20px;">
                         <li><strong>Error relativo promedio:</strong> &lt; 1% para la mayoría de configuraciones dentro del rango de entrenamiento [-20, 50]</li>
-                        <li><strong>Tiempo de inferencia:</strong> ~0.01 segundos por predicción <!--(vs minutos para métodos numéricos tradicionales)</li>-->
+                        <li><strong>Tiempo de inferencia:</strong> ~0.01 segundos por predicción</li>
                         <li><strong>Pérdida final:</strong> 2.36e-3 después de 5000 épocas</li>
                         <li><strong>Mejor pérdida:</strong> 9.48e-6 durante el entrenamiento</li>
                     </ul>
@@ -428,27 +413,10 @@
                     </ul>
                 </div>
 
-                <!-- Aplicaciones futuras -->
-                <!--<div class="project-section">
-                    <h2>🚀 Aplicaciones Futuras</h2>
-                    <p>Este trabajo tiene potencial para aplicarse en:</p>
-                    <ul style="color: var(--text-secondary); margin-left: 20px;">
-                        <li><strong>Ingeniería:</strong> Simulación de transferencia de calor en geometrías complejas</li>
-                        <li><strong>Diseño industrial:</strong> Optimización de sistemas de enfriamiento</li>
-                        <li><strong>Investigación:</strong> Extensión a ecuaciones más complejas (Navier-Stokes, Schrödinger) y problemas inversos</li>
-                        <li><strong>Educación:</strong> Herramienta didáctica para visualizar soluciones de EDPs</li>
-                    </ul>
-                </div>
-                -->
-
                 <!-- Enlaces -->
                 <div class="project-section" style="text-align: center;">
                     <h2>🔗 Enlaces</h2>
                     <div class="btn-group">
-                        <!--<a href="https://github.com/tuusuario/pinn-variable-bc" target="_blank" class="btn btn-primary">
-                            <i class="fab fa-github"></i> Ver código en GitHub
-                        </a>
-                        -->
                         <a href="https://drive.google.com/file/d/1lPD4HDYLxnd5FItM6XkrxKA3Bu6GbpSc/view?usp=sharing" class="btn btn-secondary">
                             <i class="fas fa-file-pdf"></i> Descargar tesis
                         </a>
@@ -641,8 +609,6 @@
             console.log('Slider values:', T_left, T_right);
             if (pred) {
                 console.log('Predicción encontrada:', pred.T_left, pred.T_right);
-                console.log('Rango x:', pred.x.length, 'puntos');
-                console.log('T_pinn sample:', pred.T_pinn.slice(0, 5));
             } else {
                 console.warn('No se encontró predicción');
             }
@@ -660,19 +626,21 @@
             
             // Actualizar métricas
             let metricsHtml = `<strong> MÉTRICAS DEL MODELO</strong>
-        <span style="display:block; margin:10px 0; border-bottom:1px solid rgba(77,163,255,0.3);"></span>
-    Error absoluto:
-    • Máximo: ${error_max.toExponential(4)}
-    • Promedio: ${error_mean.toExponential(4)}
-    
-    Puntos de interés:
-    • x=0.25: T= ${pred.T_pinn[50].toFixed(4)}
-    • x=0.50: T= ${pred.T_pinn[100].toFixed(4)}
-    • x=0.75: T= ${pred.T_pinn[150].toFixed(4)}
-    
-    Condiciones:
-    • T(0) = ${T_left_display.toFixed(1)}
-    • T(1) = ${T_right_display.toFixed(1)}`;
+<span style="display:block; margin:10px 0; border-bottom:1px solid rgba(77,163,255,0.3);"></span>
+Error absoluto:
+• Máximo: ${error_max.toExponential(4)}
+• Promedio: ${error_mean.toExponential(4)}
+
+Puntos de interés:
+• x=0.25: T= ${pred.T_pinn[50].toFixed(4)}
+• x=0.50: T= ${pred.T_pinn[100].toFixed(4)}
+• x=0.75: T= ${pred.T_pinn[150].toFixed(4)}
+
+Condiciones seleccionadas:
+• T(0) = ${T_left_display.toFixed(1)}
+• T(1) = ${T_right_display.toFixed(1)}
+${Math.abs(pred.T_left - T_left) > 0.1 || Math.abs(pred.T_right - T_right) > 0.1 ? 
+`• Usando predicción para T(0)=${pred.T_left.toFixed(1)}, T(1)=${pred.T_right.toFixed(1)} (interpolada)` : ''}`;
             
             document.getElementById('metricsPanel').innerHTML = metricsHtml;
             
@@ -795,9 +763,10 @@
                 });
             }
             
+            // Usar los valores de los sliders para los puntos de frontera
             traces.push({
                 x: [0, 1],
-                y: [pred.T_left, pred.T_right],
+                y: [T_left, T_right],
                 type: 'scatter',
                 mode: 'markers',
                 name: 'Condiciones de frontera',
@@ -811,8 +780,9 @@
             // Encontrar la mejor posición para la leyenda
             let legendPosition = encontrarMejorPosicionLegend(pred);
             
+            // Título con valores de los sliders
             let layout = {
-                title: `T(0)=${pred.T_left.toFixed(1)}, T(1)=${pred.T_right.toFixed(1)}`,
+                title: `T(0)=${T_left.toFixed(1)}, T(1)=${T_right.toFixed(1)}`,
                 xaxis: { 
                     title: 'x', 
                     range: [0, 1],
