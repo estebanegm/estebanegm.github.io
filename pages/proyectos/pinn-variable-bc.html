@@ -446,83 +446,48 @@
             return T_left * (1 - x) + T_right * x;
         }
 
-        // ===== ENCONTRAR PREDICCIÓN - VERSIÓN CORREGIDA =====
+        // ===== ENCONTRAR PREDICCIÓN =====
         function encontrarPrediccion(T_left, T_right) {
             if (!pinnResults || pinnResults.length === 0) return null;
             
-            console.log(`🔍 Buscando predicción para: T_left=${T_left}, T_right=${T_right}`);
+            console.log(`Buscando predicción para: T_left=${T_left}, T_right=${T_right}`);
             
-            // Buscar el punto más cercano en la grilla
-            let puntoMasCercano = null;
-            let distanciaMinima = Infinity;
-            
+            // Buscar el punto EXACTO en la grilla (con tolerancia)
             for (let pred of pinnResults) {
-                // Calcular distancia euclidiana en el espacio de parámetros
-                let dist = Math.sqrt(
-                    Math.pow(pred.T_left - T_left, 2) + 
-                    Math.pow(pred.T_right - T_right, 2)
-                );
-                
-                if (dist < distanciaMinima) {
-                    distanciaMinima = dist;
-                    puntoMasCercano = pred;
+                if (Math.abs(pred.T_left - T_left) < 0.1 && Math.abs(pred.T_right - T_right) < 0.1) {
+                    console.log(`✓ Encontrado exacto: T_left=${pred.T_left}, T_right=${pred.T_right}`);
+                    return {
+                        x: pred.x,
+                        T_pinn: pred.T_pinn,
+                        T_exact: pred.T_exact
+                    };
                 }
             }
             
-            if (!puntoMasCercano) return null;
+            // Si no hay exacto, buscar el más cercano
+            let masCercano = null;
+            let menorDistancia = Infinity;
             
-            console.log(`✓ Punto más cercano: T_left=${puntoMasCercano.T_left}, T_right=${puntoMasCercano.T_right}, distancia=${distanciaMinima.toFixed(4)}`);
+            for (let pred of pinnResults) {
+                let dist = Math.abs(pred.T_left - T_left) + Math.abs(pred.T_right - T_right);
+                if (dist < menorDistancia) {
+                    menorDistancia = dist;
+                    masCercano = pred;
+                }
+            }
             
-            // Si la distancia es muy pequeña, devolver el punto directamente
-            if (distanciaMinima < 0.01) {
+            if (masCercano) {
+                console.log(`⚠️ Usando punto más cercano: T_left=${masCercano.T_left}, T_right=${masCercano.T_right}`);
                 return {
-                    T_left: T_left,
-                    T_right: T_right,
-                    x: puntoMasCercano.x,
-                    T_pinn: puntoMasCercano.T_pinn,
-                    T_exact: puntoMasCercano.T_exact
+                    x: masCercano.x,
+                    T_pinn: masCercano.T_pinn,
+                    T_exact: masCercano.T_exact
                 };
             }
             
-            // Si no, necesitamos interpolar usando los puntos más cercanos
-            // Encontrar los 4 puntos más cercanos
-            let puntosCercanos = [];
-            for (let pred of pinnResults) {
-                let dist = Math.sqrt(
-                    Math.pow(pred.T_left - T_left, 2) + 
-                    Math.pow(pred.T_right - T_right, 2)
-                );
-                puntosCercanos.push({...pred, dist});
-            }
-            
-            // Ordenar por distancia y tomar los 4 más cercanos
-            puntosCercanos.sort((a, b) => a.dist - b.dist);
-            let top4 = puntosCercanos.slice(0, 4);
-            
-            // Interpolación por distancia inversa
-            let pesos = top4.map(p => 1 / (p.dist + 1e-10));
-            let sumaPesos = pesos.reduce((a, b) => a + b, 0);
-            
-            // Crear resultado interpolado
-            let x_vals = top4[0].x;
-            let T_pinn_interp = new Array(x_vals.length).fill(0);
-            
-            for (let i = 0; i < x_vals.length; i++) {
-                for (let j = 0; j < top4.length; j++) {
-                    T_pinn_interp[i] += top4[j].T_pinn[i] * pesos[j];
-                }
-                T_pinn_interp[i] /= sumaPesos;
-            }
-            
-            return {
-                T_left: T_left,
-                T_right: T_right,
-                x: x_vals,
-                T_pinn: T_pinn_interp,
-                T_exact: puntoMasCercano.T_exact // Esto no se usará, lo calcularemos después
-            };
+            return null;
         }
-
+        
         // ===== CARGAR DATOS =====
         async function cargarDatos() {
             try {
@@ -594,7 +559,7 @@
             }
         }
 
-        // ===== ACTUALIZAR DASHBOARD =====
+        // ===== ACTUALIZAR DASHBOARD - VERSIÓN SIMPLE =====
         function actualizarDashboard() {
             if (!pinnResults || pinnResults.length === 0) return;
             
@@ -603,93 +568,58 @@
             let showExact = document.getElementById('showExact').checked;
             let showError = document.getElementById('showError').checked;
             
-            // Mostrar valores
-            document.getElementById('tLeftValue').textContent = T_left.toFixed(1);
-            document.getElementById('tRightValue').textContent = T_right.toFixed(1);
+            // Redondear para mostrar
+            let T_left_display = Math.round(T_left * 10) / 10;
+            let T_right_display = Math.round(T_right * 10) / 10;
             
-            // Buscar predicción de la PINN para estos valores
-            let pred = encontrarPrediccion(T_left, T_right);
+            document.getElementById('tLeftValue').textContent = T_left_display.toFixed(1);
+            document.getElementById('tRightValue').textContent = T_right_display.toFixed(1);
+            
+            // Buscar predicción
+            let pred = encontrarPrediccion(T_left_display, T_right_display);
             
             if (!pred) {
-                console.warn('No se encontró predicción para:', T_left, T_right);
+                console.warn('No se encontró predicción');
                 return;
             }
             
-            // Calcular la solución exacta para estos valores
-            let T_exact = pred.x.map(x => solucionExacta(x, T_left, T_right));
-            
-            // La PINN ya viene interpolada para estos valores
-            let T_pinn = pred.T_pinn;
-            
             // Calcular error
-            let error = T_pinn.map((val, i) => Math.abs(val - T_exact[i]));
+            let error = pred.T_pinn.map((val, i) => Math.abs(val - pred.T_exact[i]));
             let error_max = Math.max(...error);
             let error_mean = error.reduce((a, b) => a + b, 0) / error.length;
-            
-            // Calcular error relativo
-            let error_rel = T_pinn.map((val, i) => {
-                return (Math.abs(val - T_exact[i]) / (Math.abs(T_exact[i]) + 1e-10)) * 100;
-            });
-            let rel_max = Math.max(...error_rel);
-            let rel_mean = error_rel.reduce((a, b) => a + b, 0) / error_rel.length;
             
             // Actualizar métricas
             let metricsHtml = `<strong> MÉTRICAS DEL MODELO</strong>
         <span style="display:block; margin:10px 0; border-bottom:1px solid rgba(77,163,255,0.3);"></span>
         Error absoluto:
-        • Máximo: ${error_max.toExponential(4)}
-        • Promedio: ${error_mean.toExponential(4)}
-        
-        Error relativo:
-        • Máximo: ${rel_max.toFixed(2)}%
-        • Promedio: ${rel_mean.toFixed(2)}%
+        Máximo: ${error_max.toExponential(4)}
+        Promedio: ${error_mean.toExponential(4)}
         
         Puntos de interés:
-        • x=0.25: T= ${T_pinn[50].toFixed(4)}
-        • x=0.50: T= ${T_pinn[100].toFixed(4)}
-        • x=0.75: T= ${T_pinn[150].toFixed(4)}
+        x=0.25: T= ${pred.T_pinn[50].toFixed(4)}
+        x=0.50: T= ${pred.T_pinn[100].toFixed(4)}
+        x=0.75: T= ${pred.T_pinn[150].toFixed(4)}
         
         Condiciones:
-        • T(0) = ${T_left.toFixed(1)}
-        • T(1) = ${T_right.toFixed(1)}`;
+        T(0) = ${T_left_display.toFixed(1)}
+        T(1) = ${T_right_display.toFixed(1)}`;
             
             document.getElementById('metricsPanel').innerHTML = metricsHtml;
             
-            // ===== GRÁFICA PRINCIPAL =====
-        
-            // Función para encontrar la mejor posición de la leyenda
-            function encontrarMejorPosicionLegend() {
-                // Lógica simple basada en los valores de temperatura
-                if (T_left > T_right) {
-                    // Temperatura decreciente: la curva baja
-                    return { x: 0.98, y: 0.98, xanchor: 'right', yanchor: 'top' };
-                } else if (T_left < T_right) {
-                    // Temperatura creciente: la curva sube
-                    return { x: 0.02, y: 0.98, xanchor: 'left', yanchor: 'top' };
-                } else {
-                    // Temperatura constante
-                    return { x: 0.02, y: 0.02, xanchor: 'left', yanchor: 'bottom' };
-                }
-            }
-            
-            // Crear los traces de la gráfica
-            let traces = [];
-            
-            // PINN (ahora sí debería coincidir)
-            traces.push({
+            // Crear gráfica
+            let traces = [{
                 x: pred.x,
-                y: T_pinn,
+                y: pred.T_pinn,
                 type: 'scatter',
                 mode: 'lines',
                 name: 'PINN',
                 line: { color: '#4da3ff', width: 3 }
-            });
+            }];
             
-            // Solución exacta
             if (showExact) {
                 traces.push({
                     x: pred.x,
-                    y: T_exact,
+                    y: pred.T_exact,
                     type: 'scatter',
                     mode: 'lines',
                     name: 'Solución exacta',
@@ -697,80 +627,48 @@
                 });
             }
             
-            // Puntos de frontera
             traces.push({
                 x: [0, 1],
-                y: [T_left, T_right],
+                y: [T_left_display, T_right_display],
                 type: 'scatter',
                 mode: 'markers',
                 name: 'Condiciones de frontera',
-                marker: { 
-                    color: '#51cf66', 
-                    size: 12,
-                    line: { color: '#ffffff', width: 2 }
-                }
+                marker: { color: '#51cf66', size: 12 }
             });
             
-            let legendPosition = encontrarMejorPosicionLegend();
-            
-            let layout = {
-                title: `T(0)=${T_left.toFixed(1)}, T(1)=${T_right.toFixed(1)}`,
-                xaxis: { 
-                    title: 'x', 
-                    range: [0, 1],
-                    gridcolor: 'rgba(255,255,255,0.1)'
-                },
-                yaxis: { 
-                    title: 'Temperatura',
-                    gridcolor: 'rgba(255,255,255,0.1)'
-                },
+            Plotly.newPlot('solutionPlot', traces, {
+                title: `T(0)=${T_left_display.toFixed(1)}, T(1)=${T_right_display.toFixed(1)}`,
+                xaxis: { title: 'x', range: [0, 1] },
+                yaxis: { title: 'Temperatura' },
                 plot_bgcolor: 'rgba(0,0,0,0)',
                 paper_bgcolor: 'rgba(0,0,0,0)',
-                font: { color: '#cfd8ff' },
-                hovermode: 'x unified',
-                legend: {
-                    x: legendPosition.x,
-                    y: legendPosition.y,
-                    xanchor: legendPosition.xanchor,
-                    yanchor: legendPosition.yanchor,
-                    bgcolor: 'rgba(18, 26, 48, 0.8)',
-                    bordercolor: 'rgba(77, 163, 255, 0.3)',
-                    borderwidth: 1,
-                    font: { color: '#ffffff', size: 11 }
-                }
-            };
-            
-            Plotly.newPlot('solutionPlot', traces, layout);
+                font: { color: '#cfd8ff' }
+            });
             
             // Gráfica de error
             if (showError) {
-                let errorTrace = {
+                Plotly.newPlot('errorPlot', [{
                     x: pred.x,
                     y: error,
                     type: 'scatter',
                     mode: 'lines',
-                    name: 'Error absoluto',
-                    line: { color: '#ff6b6b', width: 2 },
                     fill: 'tozeroy',
-                    fillcolor: 'rgba(255,107,107,0.3)'
-                };
-                
-                let errorLayout = {
-                    title: `Error absoluto - Máximo: ${error_max.toExponential(4)}`,
-                    xaxis: { title: 'x', gridcolor: 'rgba(255,255,255,0.1)' },
-                    yaxis: { title: 'Error', gridcolor: 'rgba(255,255,255,0.1)' },
+                    line: { color: '#ff6b6b' }
+                }], {
+                    title: `Error - Máx: ${error_max.toExponential(4)}`,
+                    xaxis: { title: 'x' },
+                    yaxis: { title: 'Error' },
                     plot_bgcolor: 'rgba(0,0,0,0)',
                     paper_bgcolor: 'rgba(0,0,0,0)',
-                    font: { color: '#cfd8ff' },
-                    showlegend: false
-                };
-                
-                Plotly.newPlot('errorPlot', [errorTrace], errorLayout);
+                    font: { color: '#cfd8ff' }
+                });
                 document.getElementById('errorPlotContainer').style.display = 'block';
             } else {
                 document.getElementById('errorPlotContainer').style.display = 'none';
             }
         }
+
+        
         // ===== INICIALIZAR =====
         document.addEventListener('DOMContentLoaded', cargarDatos);
         
