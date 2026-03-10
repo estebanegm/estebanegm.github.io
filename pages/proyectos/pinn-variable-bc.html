@@ -496,64 +496,43 @@
             }
         }
 
-                // ===== ENCONTRAR PRECICCIÓN CON INTERPOLACIÓN BILINEAL =====
-                function encontrarPrediccion(T_left, T_right) {
-                    if (!pinnResults || pinnResults.length === 0) return null;
-                    
-                    console.log(`Interpolando para: T_left=${T_left}, T_right=${T_right}`);
-                    
-                    // Encontrar los 4 puntos más cercanos que formen un rectángulo
-                    let puntos = [];
-                    for (let pred of pinnResults) {
-                        puntos.push({
-                            ...pred,
-                            dist: Math.sqrt(Math.pow(pred.T_left - T_left, 2) + Math.pow(pred.T_right - T_right, 2))
-                        });
-                    }
-                    
-                    // Ordenar por distancia
-                    puntos.sort((a, b) => a.dist - b.dist);
-                    
-                    // Tomar los 4 más cercanos
-                    let cercanos = puntos.slice(0, 4);
-                    
-                    if (cercanos.length === 0) return null;
-                    
-                    // Si hay un punto muy cercano, usarlo directamente
-                    if (cercanos[0].dist < 0.01) {
-                        console.log(`Usando punto exacto: T_left=${cercanos[0].T_left}, T_right=${cercanos[0].T_right}`);
-                        return {
-                            x: cercanos[0].x,
-                            T_pinn: cercanos[0].T_pinn,
-                            T_left: T_left,
-                            T_right: T_right
-                        };
-                    }
-                    
-                    // Interpolación por distancia inversa (inverse distance weighting)
-                    let pesos = cercanos.map(p => 1 / Math.pow(p.dist + 1e-10, 2));
-                    let sumaPesos = pesos.reduce((a, b) => a + b, 0);
-                    
-                    // Crear resultado interpolado
-                    let x_vals = cercanos[0].x;
-                    let T_pinn_interp = new Array(x_vals.length).fill(0);
-                    
-                    for (let i = 0; i < x_vals.length; i++) {
-                        for (let j = 0; j < cercanos.length; j++) {
-                            T_pinn_interp[i] += cercanos[j].T_pinn[i] * pesos[j];
+                    // ===== ENCONTRAR PREDICCIÓN =====
+                    function encontrarPrediccion(T_left, T_right) {
+                        if (!pinnResults || pinnResults.length === 0) return null;
+                        
+                        // Redondear a 1 decimal (como están los sliders)
+                        T_left = Math.round(T_left * 10) / 10;
+                        T_right = Math.round(T_right * 10) / 10;
+                        
+                        console.log(`Buscando datos para: T_left=${T_left}, T_right=${T_right}`);
+                        
+                        // Buscar coincidencia exacta
+                        for (let pred of pinnResults) {
+                            if (pred.T_left === T_left && pred.T_right === T_right) {
+                                console.log(`✓ Encontrado exacto: T_left=${pred.T_left}, T_right=${pred.T_right}`);
+                                return pred;
+                            }
                         }
-                        T_pinn_interp[i] /= sumaPesos;
+                        
+                        // Si no hay coincidencia, buscar el más cercano
+                        let masCercano = null;
+                        let menorDiferencia = Infinity;
+                        
+                        for (let pred of pinnResults) {
+                            let diff = Math.abs(pred.T_left - T_left) + Math.abs(pred.T_right - T_right);
+                            if (diff < menorDiferencia) {
+                                menorDiferencia = diff;
+                                masCercano = pred;
+                            }
+                        }
+                        
+                        if (masCercano) {
+                            console.log(`⚠️ Usando punto más cercano: T_left=${masCercano.T_left}, T_right=${masCercano.T_right} (diferencia: ${menorDiferencia})`);
+                            return masCercano;
+                        }
+                        
+                        return null;
                     }
-                    
-                    console.log(`Interpolado usando ${cercanos.length} puntos`);
-                    
-                    return {
-                        x: x_vals,
-                        T_pinn: T_pinn_interp,
-                        T_left: T_left,
-                        T_right: T_right
-                    };
-                }
                     // ===== ACTUALIZAR DASHBOARD =====
                     function actualizarDashboard() {
                         if (!pinnResults || pinnResults.length === 0) return;
