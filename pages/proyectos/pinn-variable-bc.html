@@ -250,8 +250,27 @@
     </style>
 </head>
 <body>
-    <!-- Header -->
-    <div id="header"></div>
+    <!-- HEADER (copiado directamente) -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <a href="#inicio" class="nav-logo">EEGM</a>
+            <ul class="nav-menu">
+                <li><a href="#inicio">Inicio</a></li>
+                <li><a href="#sobre-mi">Sobre Mí</a></li>
+                <li><a href="#timeline">Trayectoria</a></li>
+                <li><a href="#proyectos-destacados">Proyectos</a></li>
+                <li><a href="#investigacion-preview">Investigación</a></li>
+                <li><a href="#ahora">Ahora</a></li>
+                <li><a href="#blog-preview">Blog</a></li>
+                <li><a href="#contacto">Contacto</a></li>
+            </ul>
+            <div class="hamburger">
+                <span class="bar"></span>
+                <span class="bar"></span>
+                <span class="bar"></span>
+            </div>
+        </div>
+    </nav>
 
     <!-- Contenido del proyecto -->
     <main>
@@ -433,255 +452,251 @@
         </div>
     </main>
 
-    <!-- Footer -->
-    <div id="footer"></div>
+    <!-- FOOTER (copiado directamente) -->
+    <footer class="footer" id="contacto">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-logo">
+                    <h3>Esteban González</h3>
+                    <p>Física Computacional & Speedcubing</p>
+                </div>
+                <div class="contact-info-footer">
+                    <div class="contact-item">
+                        <i class="fas fa-envelope"></i>
+                        <a href="mailto:estebanegonzalezm0705@gmail.com">estebanegonzalezm0705@gmail.com</a>
+                    </div>
+                    <div class="contact-item">
+                        <i class="fas fa-phone"></i>
+                        <a href="tel:+529511152808">+52 951 115 2808</a>
+                    </div>
+                    <div class="contact-item">
+                        <i class="fas fa-map-marker-alt"></i>
+                        <span>Oaxaca, México</span>
+                    </div>
+                </div>
+                <div class="social-links">
+                    <a href="#" target="_blank"><i class="fab fa-github"></i></a>
+                    <a href="#" target="_blank"><i class="fab fa-linkedin"></i></a>
+                    <a href="#" target="_blank"><i class="fab fa-twitter"></i></a>
+                    <a href="https://www.worldcubeassociation.org/persons/2016MEND03" target="_blank"><i class="fas fa-cube"></i></a>
+                </div>
+            </div>
+            <p class="copyright">&copy; 2026 Esteban Elías González Méndez. Todos los derechos reservados.</p>
+        </div>
+    </footer>
 
-        <script src="../../js/loader.js"></script>
-        <script>
-            // ===== VARIABLES GLOBALES =====
-            let pinnResults = [];
-            let trainingData = {};
-            let x_vals = [];
-    
-            // ===== SOLUCIÓN EXACTA =====
-            function solucionExacta(x, T_left, T_right) {
-                return T_left * (1 - x) + T_right * x;
-            }
-    
-            // ===== CARGAR DATOS =====
-            async function cargarDatos() {
-                try {
-                    console.log('Cargando datos...');
-                    
-                    // 1. Cargar training_data.json
-                    const trainResp = await fetch('../../data/training_data.json');
-                    trainingData = await trainResp.json();
-                    console.log('✓ training_data.json cargado');
-                    
-                    // 2. Cargar el índice
-                    const indexResp = await fetch('../../data/pinn_index.json');
-                    const index = await indexResp.json();
-                    x_vals = index.x;
-                    console.log(`✓ Índice cargado: ${index.chunks} chunks, ${index.total_predictions} predicciones`);
-                    
-                    // 3. Cargar todos los chunks
-                    pinnResults = [];
-                    for (let i = 0; i < index.chunks; i++) {
-                        console.log(`Cargando chunk ${i}...`);
-                        const chunkResp = await fetch(`../../data/pinn_predictions_chunk_${i}.json`);
-                        const chunk = await chunkResp.json();
-                        
-                        for (let pred of chunk.predicciones) {
-                            pinnResults.push({
-                                T_left: pred.T_left,
-                                T_right: pred.T_right,
-                                x: x_vals,
-                                T_pinn: pred.T_pinn,
-                                T_exact: pred.T_exact
-                            });
-                        }
-                        console.log(`  ✓ Chunk ${i} cargado: ${chunk.predicciones.length} predicciones`);
-                    }
-                    
-                    console.log(`✅ Total: ${pinnResults.length} predicciones cargadas`);
-                    
-                    // Ocultar loading y mostrar dashboard
-                    document.getElementById('loadingIndicator').style.display = 'none';
-                    document.getElementById('dashboardContent').style.display = 'block';
-                    
-                    // Graficar entrenamiento
-                    Plotly.newPlot('trainingPlot', [{
-                        x: trainingData.epochs,
-                        y: trainingData.losses,
-                        type: 'scatter',
-                        mode: 'lines+markers',
-                        line: { color: '#4da3ff', width: 2 },
-                        marker: { size: 8, color: '#4da3ff' }
-                    }], {
-                        title: 'Evolución del Entrenamiento - Escala Log',
-                        xaxis: { title: 'Épocas', gridcolor: 'rgba(255,255,255,0.05)' },
-                        yaxis: { title: 'Pérdida', type: 'log', gridcolor: 'rgba(255,255,255,0.05)' },
-                        plot_bgcolor: 'rgba(0,0,0,0)',
-                        paper_bgcolor: 'rgba(0,0,0,0)',
-                        font: { color: '#cfd8ff' }
-                    });
-                    
-                    // Inicializar dashboard
-                    actualizarDashboard();
-                    
-                } catch (error) {
-                    console.error('Error:', error);
-                    document.getElementById('loadingIndicator').innerHTML = `
-                        <div style="color: #ff6b6b;">
-                            <i class="fas fa-exclamation-triangle"></i> Error cargando datos
-                        </div>
-                    `;
+    <script>
+        // ===== VARIABLES GLOBALES =====
+        let pinnResults = [];
+        let trainingData = {};
+        let x_vals = [];
+
+        // ===== SOLUCIÓN EXACTA =====
+        function solucionExacta(x, T_left, T_right) {
+            return T_left * (1 - x) + T_right * x;
+        }
+
+        // ===== CARGAR DATOS =====
+        async function cargarDatos() {
+            try {
+                console.log('🚀 Iniciando carga de datos...');
+                
+                // Cargar training_data.json
+                console.log('📥 Cargando training_data.json...');
+                const trainResp = await fetch('../../data/training_data.json');
+                if (!trainResp.ok) {
+                    throw new Error(`Error al cargar training_data.json: ${trainResp.status}`);
                 }
-            }
-    
-            // ===== ENCONTRAR PREDICCIÓN =====
-            function encontrarPrediccion(T_left, T_right) {
-                if (!pinnResults || pinnResults.length === 0) return null;
+                trainingData = await trainResp.json();
+                console.log('✅ training_data.json cargado');
                 
-                // Redondear a 1 decimal
-                T_left = Math.round(T_left * 10) / 10;
-                T_right = Math.round(T_right * 10) / 10;
-                
-                // Buscar coincidencia exacta
-                for (let pred of pinnResults) {
-                    if (pred.T_left === T_left && pred.T_right === T_right) {
-                        return pred;
-                    }
+                // Cargar el primer chunk
+                console.log('📥 Cargando chunk 0...');
+                const chunkResp = await fetch('../../data/pinn_predictions_chunk_0.json');
+                if (!chunkResp.ok) {
+                    throw new Error(`Error al cargar chunk 0: ${chunkResp.status}`);
                 }
+                const chunk = await chunkResp.json();
                 
-                // Si no hay coincidencia, buscar la más cercana
-                let masCercano = null;
-                let menorDiferencia = Infinity;
+                x_vals = chunk.x;
+                pinnResults = [];
                 
-                for (let pred of pinnResults) {
-                    let diff = Math.abs(pred.T_left - T_left) + Math.abs(pred.T_right - T_right);
-                    if (diff < menorDiferencia) {
-                        menorDiferencia = diff;
-                        masCercano = pred;
-                    }
-                }
-                
-                return masCercano;
-            }
-    
-            // ===== ACTUALIZAR DASHBOARD =====
-            function actualizarDashboard() {
-                if (!pinnResults || pinnResults.length === 0) return;
-                
-                let T_left = parseFloat(document.getElementById('tLeftSlider').value);
-                let T_right = parseFloat(document.getElementById('tRightSlider').value);
-                let showExact = document.getElementById('showExact').checked;
-                let showError = document.getElementById('showError').checked;
-                
-                // Mostrar valores
-                document.getElementById('tLeftValue').textContent = T_left.toFixed(1);
-                document.getElementById('tRightValue').textContent = T_right.toFixed(1);
-                
-                // Buscar predicción
-                let pred = encontrarPrediccion(T_left, T_right);
-                
-                if (!pred) return;
-                
-                // Calcular solución exacta para los valores de los sliders
-                let T_exact = pred.x.map(x => solucionExacta(x, T_left, T_right));
-                
-                // Calcular error
-                let error = pred.T_pinn.map((val, i) => Math.abs(val - T_exact[i]));
-                let error_max = Math.max(...error);
-                let error_mean = error.reduce((a, b) => a + b, 0) / error.length;
-                
-                // Calcular error relativo
-                let error_rel = pred.T_pinn.map((val, i) => {
-                    return (Math.abs(val - T_exact[i]) / (Math.abs(T_exact[i]) + 1e-10)) * 100;
-                });
-                let rel_max = Math.max(...error_rel);
-                let rel_mean = error_rel.reduce((a, b) => a + b, 0) / error_rel.length;
-                
-                // Métricas
-                let metricsHtml = `<strong> MÉTRICAS DEL MODELO</strong>
-    <span style="display:block; margin:10px 0; border-bottom:1px solid rgba(77,163,255,0.3);"></span>
-    Error absoluto:
-    • Máximo: ${error_max.toExponential(4)}
-    • Promedio: ${error_mean.toExponential(4)}
-    
-    Error relativo:
-    • Máximo: ${rel_max.toFixed(2)}%
-    • Promedio: ${rel_mean.toFixed(2)}%
-    
-    Puntos de interés:
-    • x=0.25: PINN=${pred.T_pinn[50].toFixed(4)} (exacta: ${T_exact[50].toFixed(4)})
-    • x=0.50: PINN=${pred.T_pinn[100].toFixed(4)} (exacta: ${T_exact[100].toFixed(4)})
-    • x=0.75: PINN=${pred.T_pinn[150].toFixed(4)} (exacta: ${T_exact[150].toFixed(4)})
-    
-    Condiciones:
-    • T(0) = ${T_left.toFixed(1)}
-    • T(1) = ${T_right.toFixed(1)}`;
-                
-                document.getElementById('metricsPanel').innerHTML = metricsHtml;
-                
-                // Crear gráfica
-                let traces = [{
-                    x: pred.x,
-                    y: pred.T_pinn,
-                    type: 'scatter',
-                    mode: 'lines',
-                    name: 'PINN',
-                    line: { color: '#4da3ff', width: 3 }
-                }];
-                
-                if (showExact) {
-                    traces.push({
-                        x: pred.x,
-                        y: T_exact,
-                        type: 'scatter',
-                        mode: 'lines',
-                        name: 'Solución exacta',
-                        line: { color: '#ff6b6b', width: 2, dash: 'dash' }
+                for (let pred of chunk.predicciones) {
+                    pinnResults.push({
+                        T_left: pred.T_left,
+                        T_right: pred.T_right,
+                        x: x_vals,
+                        T_pinn: pred.T_pinn,
+                        T_exact: pred.T_exact
                     });
                 }
                 
-                traces.push({
-                    x: [0, 1],
-                    y: [T_left, T_right],
-                    type: 'scatter',
-                    mode: 'markers',
-                    name: 'Fronteras',
-                    marker: { color: '#51cf66', size: 12, line: { color: '#ffffff', width: 2 } }
-                });
+                console.log(`✅ Cargadas ${pinnResults.length} predicciones`);
                 
-                Plotly.newPlot('solutionPlot', traces, {
-                    title: `T(0)=${T_left.toFixed(1)}, T(1)=${T_right.toFixed(1)}`,
-                    xaxis: { title: 'x', range: [0, 1], gridcolor: 'rgba(255,255,255,0.05)' },
-                    yaxis: { title: 'Temperatura', gridcolor: 'rgba(255,255,255,0.05)' },
+                // Ocultar loading y mostrar dashboard
+                document.getElementById('loadingIndicator').style.display = 'none';
+                document.getElementById('dashboardContent').style.display = 'block';
+                
+                // Graficar entrenamiento
+                Plotly.newPlot('trainingPlot', [{
+                    x: trainingData.epochs,
+                    y: trainingData.losses,
+                    type: 'scatter',
+                    mode: 'lines+markers',
+                    line: { color: '#4da3ff', width: 2 },
+                    marker: { size: 8, color: '#4da3ff' }
+                }], {
+                    title: 'Evolución del Entrenamiento - Escala Log',
+                    xaxis: { title: 'Épocas' },
+                    yaxis: { title: 'Pérdida', type: 'log' },
                     plot_bgcolor: 'rgba(0,0,0,0)',
                     paper_bgcolor: 'rgba(0,0,0,0)',
-                    font: { color: '#cfd8ff' },
-                    legend: { x: 0.02, y: 0.98, xanchor: 'left', yanchor: 'top' }
+                    font: { color: '#cfd8ff' }
                 });
                 
-                // Gráfica de error
-                if (showError) {
-                    Plotly.newPlot('errorPlot', [{
-                        x: pred.x,
-                        y: error,
-                        type: 'scatter',
-                        mode: 'lines',
-                        fill: 'tozeroy',
-                        fillcolor: 'rgba(255,107,107,0.3)',
-                        line: { color: '#ff6b6b', width: 2 }
-                    }], {
-                        title: `Error - Máx: ${error_max.toExponential(4)}`,
-                        xaxis: { title: 'x', gridcolor: 'rgba(255,255,255,0.05)' },
-                        yaxis: { title: 'Error', gridcolor: 'rgba(255,255,255,0.05)' },
-                        plot_bgcolor: 'rgba(0,0,0,0)',
-                        paper_bgcolor: 'rgba(0,0,0,0)',
-                        font: { color: '#cfd8ff' }
-                    });
-                    document.getElementById('errorPlotContainer').style.display = 'block';
-                } else {
-                    document.getElementById('errorPlotContainer').style.display = 'none';
+                // Inicializar dashboard
+                actualizarDashboard();
+                
+            } catch (error) {
+                console.error('❌ Error:', error);
+                document.getElementById('loadingIndicator').innerHTML = `
+                    <div style="color: #ff6b6b;">
+                        <i class="fas fa-exclamation-triangle"></i> 
+                        Error: ${error.message}<br>
+                        <button onclick="location.reload()" class="btn btn-secondary" style="margin-top:20px;">
+                            Reintentar
+                        </button>
+                    </div>
+                `;
+            }
+        }
+
+        // ===== ENCONTRAR PREDICCIÓN =====
+        function encontrarPrediccion(T_left, T_right) {
+            if (!pinnResults || pinnResults.length === 0) return null;
+            
+            T_left = Math.round(T_left * 10) / 10;
+            T_right = Math.round(T_right * 10) / 10;
+            
+            // Buscar coincidencia exacta
+            for (let pred of pinnResults) {
+                if (pred.T_left === T_left && pred.T_right === T_right) {
+                    return pred;
                 }
             }
-    
-            // ===== INICIALIZAR =====
-            document.addEventListener('DOMContentLoaded', cargarDatos);
             
-            // Event listeners
-            document.getElementById('tLeftSlider').addEventListener('input', actualizarDashboard);
-            document.getElementById('tRightSlider').addEventListener('input', actualizarDashboard);
-            document.getElementById('showExact').addEventListener('change', actualizarDashboard);
-            document.getElementById('showError').addEventListener('change', actualizarDashboard);
-        </script>
-    
+            // Buscar la más cercana
+            let masCercano = null;
+            let menorDiferencia = Infinity;
+            
+            for (let pred of pinnResults) {
+                let diff = Math.abs(pred.T_left - T_left) + Math.abs(pred.T_right - T_right);
+                if (diff < menorDiferencia) {
+                    menorDiferencia = diff;
+                    masCercano = pred;
+                }
+            }
+            
+            return masCercano;
+        }
+
+        // ===== ACTUALIZAR DASHBOARD =====
+        function actualizarDashboard() {
+            if (!pinnResults || pinnResults.length === 0) return;
+            
+            let T_left = parseFloat(document.getElementById('tLeftSlider').value);
+            let T_right = parseFloat(document.getElementById('tRightSlider').value);
+            let showExact = document.getElementById('showExact').checked;
+            let showError = document.getElementById('showError').checked;
+            
+            document.getElementById('tLeftValue').textContent = T_left.toFixed(1);
+            document.getElementById('tRightValue').textContent = T_right.toFixed(1);
+            
+            let pred = encontrarPrediccion(T_left, T_right);
+            if (!pred) return;
+            
+            let T_exact = pred.x.map(x => solucionExacta(x, T_left, T_right));
+            let error = pred.T_pinn.map((val, i) => Math.abs(val - T_exact[i]));
+            let error_max = Math.max(...error);
+            
+            // Métricas
+            let metricsHtml = `<strong> MÉTRICAS DEL MODELO</strong>
+<span style="display:block; margin:10px 0; border-bottom:1px solid rgba(77,163,255,0.3);"></span>
+Error absoluto máximo: ${error_max.toExponential(4)}
+
+Puntos de interés:
+• x=0.25: PINN=${pred.T_pinn[50].toFixed(4)} (exacta: ${T_exact[50].toFixed(4)})
+• x=0.50: PINN=${pred.T_pinn[100].toFixed(4)} (exacta: ${T_exact[100].toFixed(4)})
+• x=0.75: PINN=${pred.T_pinn[150].toFixed(4)} (exacta: ${T_exact[150].toFixed(4)})
+
+Condiciones: T(0)=${T_left.toFixed(1)}, T(1)=${T_right.toFixed(1)}`;
+            
+            document.getElementById('metricsPanel').innerHTML = metricsHtml;
+            
+            // Gráfica
+            let traces = [{
+                x: pred.x,
+                y: pred.T_pinn,
+                type: 'scatter',
+                mode: 'lines',
+                name: 'PINN',
+                line: { color: '#4da3ff', width: 3 }
+            }];
+            
+            if (showExact) {
+                traces.push({
+                    x: pred.x,
+                    y: T_exact,
+                    type: 'scatter',
+                    mode: 'lines',
+                    name: 'Solución exacta',
+                    line: { color: '#ff6b6b', width: 2, dash: 'dash' }
+                });
+            }
+            
+            traces.push({
+                x: [0, 1],
+                y: [T_left, T_right],
+                type: 'scatter',
+                mode: 'markers',
+                name: 'Fronteras',
+                marker: { color: '#51cf66', size: 12 }
+            });
+            
+            Plotly.newPlot('solutionPlot', traces, {
+                title: `T(0)=${T_left.toFixed(1)}, T(1)=${T_right.toFixed(1)}`,
+                xaxis: { title: 'x', range: [0, 1] },
+                yaxis: { title: 'Temperatura' },
+                plot_bgcolor: 'rgba(0,0,0,0)',
+                paper_bgcolor: 'rgba(0,0,0,0)',
+                font: { color: '#cfd8ff' }
+            });
+            
+            if (showError) {
+                Plotly.newPlot('errorPlot', [{
+                    x: pred.x,
+                    y: error,
+                    type: 'scatter',
+                    mode: 'lines',
+                    fill: 'tozeroy',
+                    line: { color: '#ff6b6b' }
+                }], {
+                    title: `Error - Máx: ${error_max.toExponential(4)}`,
+                    xaxis: { title: 'x' },
+                    yaxis: { title: 'Error' },
+                    plot_bgcolor: 'rgba(0,0,0,0)',
+                    paper_bgcolor: 'rgba(0,0,0,0)',
+                    font: { color: '#cfd8ff' }
+                });
+                document.getElementById('errorPlotContainer').style.display = 'block';
+            } else {
+                document.getElementById('errorPlotContainer').style.display = 'none';
+            }
+        }
+
         // ===== INICIALIZAR =====
         document.addEventListener('DOMContentLoaded', cargarDatos);
         
-        // Event listeners
         document.getElementById('tLeftSlider').addEventListener('input', actualizarDashboard);
         document.getElementById('tRightSlider').addEventListener('input', actualizarDashboard);
         document.getElementById('showExact').addEventListener('change', actualizarDashboard);
