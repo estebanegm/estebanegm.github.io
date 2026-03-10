@@ -3,12 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Rubik's Stats Tracker | Esteban González</title>
+    <title>Cubing Stats | Esteban González</title>
     <link rel="stylesheet" href="../../css/styles.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
-        /* Mismos estilos que antes */
         .project-header {
             background: linear-gradient(135deg, var(--gradient-start), var(--gradient-end));
             padding: 120px 0 60px;
@@ -95,33 +94,119 @@
             font-size: 0.9rem;
             border: 1px solid rgba(77, 163, 255, 0.2);
         }
-        .result-image {
+        .code-block {
             background: var(--bg-primary);
             padding: 20px;
-            border-radius: 15px;
-            margin: 30px 0;
-            text-align: center;
-        }
-        .result-image img {
-            max-width: 100%;
             border-radius: 10px;
-            border: 1px solid rgba(77, 163, 255, 0.2);
-        }
-        .result-image .caption {
-            color: var(--text-footer);
-            font-size: 0.9rem;
-            margin-top: 10px;
-            font-style: italic;
+            border-left: 3px solid var(--accent-primary);
+            margin: 20px 0;
+            font-family: 'Courier New', monospace;
+            color: var(--text-secondary);
+            overflow-x: auto;
         }
         .btn-group {
             display: flex;
             gap: 15px;
             margin-top: 30px;
+            flex-wrap: wrap;
         }
         .btn-group .btn {
             flex: 1;
+            min-width: 200px;
             text-align: center;
         }
+        .demo-badge {
+            display: inline-block;
+            background: linear-gradient(135deg, #4da3ff, #2d7be0);
+            color: white;
+            padding: 8px 20px;
+            border-radius: 30px;
+            font-weight: 600;
+            margin-bottom: 20px;
+            border: 1px solid rgba(255,255,255,0.2);
+        }
+        .coming-soon {
+            opacity: 0.7;
+            cursor: not-allowed;
+        }
+        .coming-soon:hover {
+            transform: none !important;
+            box-shadow: none !important;
+        }
+        
+        /* Estilos para la galería de imágenes */
+        .screenshot-gallery {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 25px;
+            margin: 30px 0;
+        }
+        .screenshot-item {
+            background: var(--bg-primary);
+            border-radius: 15px;
+            overflow: hidden;
+            border: 1px solid rgba(77, 163, 255, 0.2);
+            transition: var(--transition);
+        }
+        .screenshot-item:hover {
+            transform: translateY(-5px);
+            border-color: var(--accent-primary);
+            box-shadow: var(--card-shadow);
+        }
+        .screenshot-image {
+            width: 100%;
+            height: 200px;
+            background: linear-gradient(45deg, var(--bg-primary), var(--bg-secondary));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-bottom: 1px solid rgba(77, 163, 255, 0.2);
+        }
+        .screenshot-image i {
+            font-size: 4rem;
+            color: var(--accent-primary);
+            opacity: 0.7;
+        }
+        .screenshot-caption {
+            padding: 15px;
+            text-align: center;
+        }
+        .screenshot-caption h4 {
+            color: var(--accent-primary);
+            margin-bottom: 8px;
+        }
+        .screenshot-caption p {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            margin: 0;
+        }
+        
+        /* Estilo para tarjetas de estadísticas */
+        .stats-showcase {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+            margin: 30px 0;
+        }
+        .stat-showcase-card {
+            background: var(--bg-primary);
+            padding: 20px;
+            border-radius: 12px;
+            text-align: center;
+            border: 1px solid rgba(77, 163, 255, 0.2);
+        }
+        .stat-showcase-number {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--accent-primary);
+            line-height: 1.2;
+        }
+        .stat-showcase-label {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            margin-top: 5px;
+        }
+        
         @media (max-width: 768px) {
             .project-header h1 {
                 font-size: 2rem;
@@ -132,6 +217,12 @@
             .btn-group {
                 flex-direction: column;
             }
+            .screenshot-gallery {
+                grid-template-columns: 1fr;
+            }
+            .stats-showcase {
+                grid-template-columns: 1fr;
+            }
         }
     </style>
 </head>
@@ -141,29 +232,49 @@
     <main>
         <div class="project-header">
             <div class="container">
-                <h1>Rubik's Stats Tracker</h1>
+                <h1>Cubing Stats</h1>
                 <p class="project-subtitle">Aplicación para análisis estadístico de tiempos en speedcubing</p>
             </div>
         </div>
 
         <div class="project-content">
             <div class="container">
+                <!-- Descripción del Proyecto -->
                 <div class="project-section">
-                    <h2>🎯 Descripción del Proyecto</h2>
-                    <p>Como speedcuber y coordinador del Oaxaca Rubik's Team, siempre he sentido la necesidad de tener mejores herramientas para analizar mi progreso. Por eso desarrollé <strong>Rubik's Stats Tracker</strong>, una aplicación que permite registrar, visualizar y analizar tiempos de práctica en speedcubing.</p>
+                    <h2>📖 Descripción del Proyecto</h2>
+                    <p>Como speedcuber y coordinador del <strong>Oaxaca Rubik's Team</strong> siempre he sentido la necesidad de tener mejores herramientas para analizar mi progreso. Por eso desarrollé <strong>Cubing Stats</strong>, una aplicación web que permite registrar, visualizar y analizar tiempos de práctica en speedcubing.</p>
                     
-                    <p>La app está diseñada para ayudar a speedcubers de todos los niveles a entender su evolución, identificar áreas de mejora y mantener motivación a través de visualizaciones claras de su progreso.</p>
+                    <p>La app que estoy diseñando es para ayudar a speedcubers de todos los niveles a entender su evolución, identificar áreas de mejora y mantener motivación a través de visualizaciones claras de su progreso. Soporta múltiples formatos de archivo de las apps más populares como <strong>Cubic Timer, Twisty Timer, Nano Timer y CsTimer</strong>.</p>
 
                     <div class="tech-tags">
                         <span class="tech-tag">Python</span>
+                        <span class="tech-tag">Streamlit</span>
                         <span class="tech-tag">Pandas</span>
                         <span class="tech-tag">Plotly</span>
-                        <span class="tech-tag">Streamlit</span>
-                        <span class="tech-tag">SQLite</span>
+                        <!--<span class="tech-tag">SQLite</span>-->
                         <span class="tech-tag">Estadística</span>
+                        <!--<span class="tech-tag">FPDF</span>-->
                     </div>
                 </div>
 
+                <!-- Demo en Vivo -->
+                <div class="project-section" style="text-align: center;">
+                    <!--<span class="demo-badge"><i class="fas fa-rocket"></i> DEMO EN VIVO</span>-->
+                    <h2>🚀 Prueba la App Ahora</h2>
+                    <p>La aplicación está desplegada en Streamlit Cloud y aunque aún está en desarrollo ya está lista para usar. Solo sube tu archivo de tiempos y comienza a analizar tu progreso.</p>
+                    
+                    <div class="btn-group" style="justify-content: center;">
+                        <a href="https://cubingstats.streamlit.app/" target="_blank" class="btn btn-primary" style="font-size: 1.2rem; padding: 1rem 2rem;">
+                            <i class="fas fa-rocket"></i> Abrir Cubing Stats
+                        </a>
+                    </div>
+                    
+                    <p style="color: var(--text-footer); margin-top: 20px;">
+                        <i class="fas fa-info-circle"></i> La app es completamente gratuita y no requiere registro
+                    </p>
+                </div>
+
+                <!-- Características Principales -->
                 <div class="project-section">
                     <h2>✨ Características Principales</h2>
                     
@@ -171,100 +282,214 @@
                         <div class="feature-card">
                             <i class="fas fa-chart-line"></i>
                             <h4>Progreso temporal</h4>
-                            <p>Gráficas interactivas de evolución de tiempos</p>
+                            <p>Gráficas interactivas de evolución de tiempos con promedio móvil ajustable</p>
                         </div>
                         <div class="feature-card">
                             <i class="fas fa-calculator"></i>
                             <h4>Métricas avanzadas</h4>
-                            <p>Promedios móviles, mejores tiempos, consistencia</p>
+                            <p>Promedios (mo3, ao5, ao12, ao50, ao100), mejores tiempos, consistencia</p>
                         </div>
                         <div class="feature-card">
                             <i class="fas fa-table"></i>
-                            <h4>Exportación de datos</h4>
-                            <p>CSV, Excel y comparación con WCA</p>
+                            <h4>Múltiples formatos</h4>
+                            <p>Soporte para Cubic Timer, Twisty Timer (en proceso), Nano Timer y CsTimer</p>
                         </div>
                         <div class="feature-card">
                             <i class="fas fa-chart-pie"></i>
                             <h4>Distribuciones</h4>
-                            <p>Histogramas y análisis de frecuencia</p>
+                            <p>Histogramas, diagramas de caja y análisis de frecuencia por rangos</p>
                         </div>
-                    </div>
-
-                    <h3>📊 Ejemplo de análisis</h3>
-                    <div class="result-image">
-                        <div style="height: 300px; background: linear-gradient(45deg, var(--bg-primary), var(--bg-secondary)); display: flex; align-items: center; justify-content: center;">
-                            <i class="fas fa-chart-bar" style="font-size: 5rem; color: var(--accent-primary); opacity: 0.5;"></i>
+                        <div class="feature-card">
+                            <i class="fas fa-fire"></i>
+                            <h4>Análisis de rachas</h4>
+                            <p>Seguimiento de días consecutivos de práctica y estadísticas de actividad</p>
                         </div>
-                        <p class="caption">Evolución de tiempos promedio en 3x3 (últimos 6 meses)</p>
+                        <div class="feature-card">
+                            <i class="fas fa-brain"></i>
+                            <h4>Análisis avanzado</h4>
+                            <p>Fatiga en sesiones, mejor hora para practicar, probabilidad de PB</p>
+                        </div>
                     </div>
                 </div>
 
+                <!-- Galería de Capturas (Ejemplos de Análisis) -->
+                <div class="project-section">
+                    <h2>📊 Ejemplos de Análisis</h2>
+                    
+                    <div class="screenshot-gallery">
+                        <div class="screenshot-item">
+                            <div class="screenshot-image">
+                                <!--<i class="fas fa-chart-line"></i>-->
+                                <img src="pages\proyectos\images\Evolución_temporal.PNG" alt="Evolución de tiempos" style="width: 100%; height: 100%; object-fit: cover;">
+                            </div>
+                            <div class="screenshot-caption">
+                                <h4>Evolución de Tiempos</h4>
+                                <p>Visualización interactiva de todos tus solves con promedio móvil. Identifica tendencias de mejora a lo largo del tiempo.</p>
+                            </div>
+                        </div>
+                        
+                        <div class="screenshot-item">
+                            <div class="screenshot-image">
+                                <i class="fas fa-chart-bar"></i>
+                            </div>
+                            <div class="screenshot-caption">
+                                <h4>Distribución por Rangos</h4>
+                                <p>Clasificación automática de tiempos en percentiles. Ve en qué rango se concentran la mayoría de tus solves.</p>
+                            </div>
+                        </div>
+                        
+                        <div class="screenshot-item">
+                            <div class="screenshot-image">
+                                <i class="fas fa-fire"></i>
+                            </div>
+                            <div class="screenshot-caption">
+                                <h4>Análisis de Rachas</h4>
+                                <p>Seguimiento de días consecutivos de práctica. Identifica tus períodos más productivos y consistentes.</p>
+                            </div>
+                        </div>
+                        
+                        <div class="screenshot-item">
+                            <div class="screenshot-image">
+                                <i class="fas fa-table"></i>
+                            </div>
+                            <div class="screenshot-caption">
+                                <h4>Top 10 Mejores Ao5</h4>
+                                <p>Listado detallado de tus mejores promedios de 5, mostrando los tiempos que los componen y cuándo los lograste.</p>
+                            </div>
+                        </div>
+                        
+                        <div class="screenshot-item">
+                            <div class="screenshot-image">
+                                <i class="fas fa-clock"></i>
+                            </div>
+                            <div class="screenshot-caption">
+                                <h4>Actividad por Hora</h4>
+                                <p>Descubre a qué horas del día rindes mejor y cuándo sueles practicar más frecuentemente.</p>
+                            </div>
+                        </div>
+                        
+                        <div class="screenshot-item">
+                            <div class="screenshot-image">
+                                <i class="fas fa-brain"></i>
+                            </div>
+                            <div class="screenshot-caption">
+                                <h4>Análisis de Fatiga</h4>
+                                <p>Evalúa cómo cambia tu rendimiento en sesiones largas para optimizar tus prácticas.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Estadísticas de Ejemplo -->
+                    <div style="margin-top: 40px; background: var(--bg-primary); padding: 25px; border-radius: 15px;">
+                        <h3 style="color: var(--accent-primary); text-align: center; margin-bottom: 20px;">📈 Ejemplo de Métricas Generadas</h3>
+                        
+                        <div class="stats-showcase">
+                            <div class="stat-showcase-card">
+                                <div class="stat-showcase-number">1,234</div>
+                                <div class="stat-showcase-label">Total Solves</div>
+                            </div>
+                            <div class="stat-showcase-card">
+                                <div class="stat-showcase-number">87</div>
+                                <div class="stat-showcase-label">Días de práctica</div>
+                            </div>
+                            <div class="stat-showcase-card">
+                                <div class="stat-showcase-number">12.34s</div>
+                                <div class="stat-showcase-label">Mejor tiempo</div>
+                            </div>
+                            <div class="stat-showcase-card">
+                                <div class="stat-showcase-number">15.67s</div>
+                                <div class="stat-showcase-label">Promedio general</div>
+                            </div>
+                            <div class="stat-showcase-card">
+                                <div class="stat-showcase-number">2.34s</div>
+                                <div class="stat-showcase-label">Desviación estándar</div>
+                            </div>
+                            <div class="stat-showcase-card">
+                                <div class="stat-showcase-number">14.56s</div>
+                                <div class="stat-showcase-label">Mejor ao5</div>
+                            </div>
+                        </div>
+                        
+                        <p style="color: var(--text-secondary); text-align: center; margin-top: 15px; font-style: italic;">
+                            * Estos son valores de ejemplo - la app calcula las métricas exactas de tus datos reales
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Tecnologías Utilizadas -->
                 <div class="project-section">
                     <h2>💻 Tecnologías Utilizadas</h2>
                     
-                    <h3>Backend</h3>
-                    <ul style="color: var(--text-secondary); margin-left: 20px;">
-                        <li><strong>Python:</strong> Lógica principal y procesamiento de datos</li>
-                        <li><strong>Pandas:</strong> Manipulación y análisis de datos</li>
-                        <li><strong>SQLite:</strong> Base de datos local para almacenar sesiones</li>
-                    </ul>
-
-                    <h3>Frontend</h3>
-                    <ul style="color: var(--text-secondary); margin-left: 20px;">
-                        <li><strong>Streamlit:</strong> Framework para crear la interfaz web</li>
-                        <li><strong>Plotly:</strong> Visualizaciones interactivas</li>
-                        <li><strong>HTML/CSS:</strong> Personalización de estilos</li>
-                    </ul>
-                </div>
-
-                <div class="project-section">
-                    <h2>📈 Métricas que calcula la app</h2>
-                    <ul style="color: var(--text-secondary); margin-left: 20px;">
-                        <li><strong>Promedio y desviación estándar:</strong> Por sesión y global</li>
-                        <li><strong>Mejor tiempo y peor tiempo:</strong> Con outliers removidos</li>
-                        <li><strong>Promedio de 5/12/50:</strong> Estándar en speedcubing</li>
-                        <li><strong>Tendencia:</strong> Regresión lineal para ver mejora</li>
-                        <li><strong>Consistencia:</strong> Porcentaje de tiempos dentro de rangos</li>
-                    </ul>
-
-                    <div class="code-block">
-                        <pre><code># Ejemplo de cálculo de promedio móvil
-def moving_average(times, window=5):
-    return pd.Series(times).rolling(window=window).mean()
-
-# Detección automática de outliers
-def remove_outliers(times, threshold=2.5):
-    mean = np.mean(times)
-    std = np.std(times)
-    return [t for t in times if abs(t - mean) < threshold * std]</code></pre>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 30px;">
+                        <div>
+                            <h3>Backend</h3>
+                            <ul style="color: var(--text-secondary);">
+                                <li><strong>Python:</strong> Lógica principal y procesamiento de datos</li>
+                                <li><strong>Pandas:</strong> Manipulación y análisis de datos</li>
+                                <li><strong>NumPy:</strong> Operaciones numéricas y estadísticas</li>
+                                <!--<li><strong>SQLite:</strong> Base de datos local (en desarrollo)</li>-->
+                                <li><strong>FPDF:</strong> Generación de reportes PDF</li>
+                            </ul>
+                        </div>
+                        <div>
+                            <h3>Frontend</h3>
+                            <ul style="color: var(--text-secondary);">
+                                <li><strong>Streamlit:</strong> Framework para la interfaz web</li>
+                                <li><strong>Plotly:</strong> Visualizaciones interactivas</li>
+                                <li><strong>Matplotlib/Seaborn:</strong> Gráficos estadísticos</li>
+                                <li><strong>HTML/CSS:</strong> Personalización de estilos</li>
+                            </ul>
+                        </div>
                     </div>
                 </div>
 
+                <!-- Formatos Soportados -->
                 <div class="project-section">
-                    <h2>🚀 Próximas características</h2>
-                    <ul style="color: var(--text-secondary); margin-left: 20px;">
-                        <li><strong>Integración con WCA:</strong> Importar automáticamente resultados de competencias</li>
-                        <li><strong>Comparación con otros cubers:</strong> Anonimizada para ver ranking</li>
-                        <li><strong>App móvil:</strong> Versión para iOS/Android con React Native</li>
-                        <li><strong>Predicción de tiempos:</strong> Usando ML para estimar próxima competencia</li>
-                    </ul>
+                    <h2>📁 Formatos de Archivo Soportados</h2>
+                    
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px;">
+                        <div style="background: var(--bg-primary); padding: 20px; border-radius: 15px;">
+                            <i class="fas fa-file-alt" style="color: var(--accent-primary); font-size: 2rem;"></i>
+                            <h4>TXT (Cubic Timer)</h4>
+                            <code style="color: var(--text-secondary); font-size: 0.8rem;">"38.79";"D2 B2 R2...";"2023-08-29T19:19:15..."</code>
+                        </div>
+                        <div style="background: var(--bg-primary); padding: 20px; border-radius: 15px;">
+                            <i class="fas fa-file-alt" style="color: var(--accent-primary); font-size: 2rem;"></i>
+                            <h4>TXT (Twisty Timer)</h4>
+                            <code style="color: var(--text-secondary); font-size: 0.8rem;">"38.79";"D2 B2 R2...";"2023-08-29T20:19:15..."</code>
+                        </div>
+                        <div style="background: var(--bg-primary); padding: 20px; border-radius: 15px;">
+                            <i class="fas fa-file-csv" style="color: var(--accent-primary); font-size: 2rem;"></i>
+                            <h4>CSV (Nano Timer)</h4>
+                            <code style="color: var(--text-secondary); font-size: 0.8rem;">4x4x4,Default,35.972,Aug 15 2023...</code>
+                        </div>
+                        <div style="background: var(--bg-primary); padding: 20px; border-radius: 15px;">
+                            <i class="fas fa-file-csv" style="color: var(--accent-primary); font-size: 2rem;"></i>
+                            <h4>CSV (CsTimer)</h4>
+                            <code style="color: var(--text-secondary); font-size: 0.8rem;">No.;Time;Scramble;Date<br>1;31.94;R2 L' U'...;2024-07-02</code>
+                        </div>
+                    </div>
                 </div>
 
+                <!-- Enlaces -->
                 <div class="project-section" style="text-align: center;">
                     <h2>🔗 Enlaces</h2>
                     <div class="btn-group">
-                        <a href="https://github.com/tuusuario/rubik-stats-tracker" target="_blank" class="btn btn-primary">
-                            <i class="fab fa-github"></i> Código fuente
+                        <a href="https://cubingstats.streamlit.app/" target="_blank" class="btn btn-primary">
+                            <i class="fas fa-rocket"></i> Probar Cubing Stats
                         </a>
-                        <a href="#" target="_blank" class="btn btn-secondary">
-                            <i class="fas fa-rocket"></i> Demo en vivo
-                        </a>
-                        <a href="#" class="btn btn-secondary">
-                            <i class="fas fa-download"></i> Descargar app
+                        <!--<a href="https://github.com/tuusuario/rubik-stats-tracker" target="_blank" class="btn btn-secondary">
+                            <i class="fab fa-github"></i> Ver código fuente
+                        </a>-->
+                        <a href="#" class="btn btn-secondary coming-soon" onclick="return false;" style="pointer-events: none;">
+                            <i class="fas fa-download"></i> Descargar (Próximamente)
                         </a>
                     </div>
                     <p style="margin-top: 30px; color: var(--text-footer);">
                         <i class="fas fa-cube"></i> Desarrollado para la comunidad speedcuber
+                    </p>
+                    <p style="color: var(--text-footer); font-size: 0.9rem;">
+                        <i class="fas fa-code-branch"></i> WCA ID: <a href="https://www.worldcubeassociation.org/persons/2016MEND03" target="_blank" style="color: var(--accent-primary);">2016MEND03</a>
                     </p>
                 </div>
             </div>
