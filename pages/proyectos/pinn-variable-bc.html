@@ -526,109 +526,264 @@
             return masCercano;
         }
 
-        // ===== ACTUALIZAR DASHBOARD =====
-        function actualizarDashboard() {
-            if (!pinnResults || pinnResults.length === 0) return;
-            
-            let T_left = parseFloat(document.getElementById('tLeftSlider').value);
-            let T_right = parseFloat(document.getElementById('tRightSlider').value);
-            let showExact = document.getElementById('showExact').checked;
-            let showError = document.getElementById('showError').checked;
-            
-            // Mostrar valores
-            document.getElementById('tLeftValue').textContent = T_left.toFixed(1);
-            document.getElementById('tRightValue').textContent = T_right.toFixed(1);
-            
-            // Buscar predicción
-            let pred = encontrarPrediccion(T_left, T_right);
-            
-            if (!pred) return;
-            
-            // Calcular error
-            let error = pred.T_pinn.map((val, i) => Math.abs(val - pred.T_exact[i]));
-            let error_max = Math.max(...error);
-            let error_mean = error.reduce((a, b) => a + b, 0) / error.length;
-            
-            // Métricas
-            let metricsHtml = `<strong> MÉTRICAS DEL MODELO</strong>
-<span style="display:block; margin:10px 0; border-bottom:1px solid rgba(77,163,255,0.3);"></span>
-Error absoluto:
-• Máximo: ${error_max.toExponential(4)}
-• Promedio: ${error_mean.toExponential(4)}
-
-Puntos de interés:
-• x=0.25: T= ${pred.T_pinn[50].toFixed(4)}
-• x=0.50: T= ${pred.T_pinn[100].toFixed(4)}
-• x=0.75: T= ${pred.T_pinn[150].toFixed(4)}
-
-Condiciones:
-• T(0) = ${T_left.toFixed(1)}
-• T(1) = ${T_right.toFixed(1)}`;
-            
-            document.getElementById('metricsPanel').innerHTML = metricsHtml;
-            
-            // Gráfica principal
-            let traces = [{
-                x: pred.x,
-                y: pred.T_pinn,
-                type: 'scatter',
-                mode: 'lines',
-                name: 'PINN',
-                line: { color: '#4da3ff', width: 3 }
-            }];
-            
-            if (showExact) {
+                // ===== ACTUALIZAR DASHBOARD =====
+            function actualizarDashboard() {
+                if (!pinnResults || pinnResults.length === 0) return;
+                
+                let T_left = parseFloat(document.getElementById('tLeftSlider').value);
+                let T_right = parseFloat(document.getElementById('tRightSlider').value);
+                let showExact = document.getElementById('showExact').checked;
+                let showError = document.getElementById('showError').checked;
+                
+                // Mostrar valores de los sliders
+                document.getElementById('tLeftValue').textContent = T_left.toFixed(1);
+                document.getElementById('tRightValue').textContent = T_right.toFixed(1);
+                
+                // Buscar predicción
+                let pred = encontrarPrediccion(T_left, T_right);
+                
+                if (!pred) return;
+                
+                // Calcular solución exacta para los valores de los sliders
+                let T_exact = pred.x.map(x => solucionExacta(x, T_left, T_right));
+                
+                // Calcular error
+                let error = pred.T_pinn.map((val, i) => Math.abs(val - T_exact[i]));
+                let error_max = Math.max(...error);
+                let error_mean = error.reduce((a, b) => a + b, 0) / error.length;
+                
+                // Calcular error relativo
+                let error_rel = pred.T_pinn.map((val, i) => {
+                    return (Math.abs(val - T_exact[i]) / (Math.abs(T_exact[i]) + 1e-10)) * 100;
+                });
+                let rel_max = Math.max(...error_rel);
+                let rel_mean = error_rel.reduce((a, b) => a + b, 0) / error_rel.length;
+                
+                // Actualizar métricas
+                let metricsHtml = `<strong> MÉTRICAS DEL MODELO</strong>
+    <span style="display:block; margin:10px 0; border-bottom:1px solid rgba(77,163,255,0.3);"></span>
+    Error absoluto:
+    • Máximo: ${error_max.toExponential(4)}
+    • Promedio: ${error_mean.toExponential(4)}
+    
+    Error relativo:
+    • Máximo: ${rel_max.toFixed(2)}%
+    • Promedio: ${rel_mean.toFixed(2)}%
+    
+    Puntos de interés:
+    • x=0.25: PINN=${pred.T_pinn[50].toFixed(4)} (exacta: ${T_exact[50].toFixed(4)})
+    • x=0.50: PINN=${pred.T_pinn[100].toFixed(4)} (exacta: ${T_exact[100].toFixed(4)})
+    • x=0.75: PINN=${pred.T_pinn[150].toFixed(4)} (exacta: ${T_exact[150].toFixed(4)})
+    
+    Condiciones:
+    • T(0) = ${T_left.toFixed(1)}
+    • T(1) = ${T_right.toFixed(1)}`;
+                
+                document.getElementById('metricsPanel').innerHTML = metricsHtml;
+                
+                // ===== GRÁFICA PRINCIPAL CON LEYENDA INTELIGENTE =====
+    
+                // Función para encontrar la mejor posición de la leyenda
+                function encontrarMejorPosicionLegend(T_left, T_right, T_pinn, x) {
+                    // Definir las 4 posibles posiciones para la leyenda
+                    let posiciones = [
+                        { 
+                            x: 0.02, y: 0.98, 
+                            xanchor: 'left', yanchor: 'top', 
+                            nombre: 'sup-izq',
+                            desc: 'Superior izquierda'
+                        },
+                        { 
+                            x: 0.98, y: 0.98, 
+                            xanchor: 'right', yanchor: 'top', 
+                            nombre: 'sup-der',
+                            desc: 'Superior derecha'
+                        },
+                        { 
+                            x: 0.02, y: 0.02, 
+                            xanchor: 'left', yanchor: 'bottom', 
+                            nombre: 'inf-izq',
+                            desc: 'Inferior izquierda'
+                        },
+                        { 
+                            x: 0.98, y: 0.02, 
+                            xanchor: 'right', yanchor: 'bottom', 
+                            nombre: 'inf-der',
+                            desc: 'Inferior derecha'
+                        }
+                    ];
+                    
+                    // Calcular el rango de temperaturas
+                    let T_min = Math.min(...T_pinn);
+                    let T_max = Math.max(...T_pinn);
+                    let T_range = T_max - T_min;
+                    
+                    // Evaluar qué posiciones están menos ocupadas
+                    let puntajes = [0, 0, 0, 0]; // Puntajes para cada posición (menor = mejor)
+                    
+                    // Muestrear algunos puntos para evaluar
+                    let numMuestras = 50;
+                    for (let i = 0; i <= numMuestras; i++) {
+                        let idx = Math.floor(i * (x.length - 1) / numMuestras);
+                        let x_norm = x[idx]; // x entre 0 y 1
+                        let y_norm = (T_pinn[idx] - T_min) / (T_range + 1e-10); // y normalizado entre 0 y 1
+                        
+                        // Evaluar cada posición
+                        // Posición 0: Superior izquierda (x ~0, y ~1)
+                        let dist0 = Math.sqrt(Math.pow(x_norm - 0.02, 2) + Math.pow(y_norm - 0.98, 2));
+                        if (dist0 < 0.15) puntajes[0] += 1;
+                        
+                        // Posición 1: Superior derecha (x ~1, y ~1)
+                        let dist1 = Math.sqrt(Math.pow(x_norm - 0.98, 2) + Math.pow(y_norm - 0.98, 2));
+                        if (dist1 < 0.15) puntajes[1] += 1;
+                        
+                        // Posición 2: Inferior izquierda (x ~0, y ~0)
+                        let dist2 = Math.sqrt(Math.pow(x_norm - 0.02, 2) + Math.pow(y_norm - 0.02, 2));
+                        if (dist2 < 0.15) puntajes[2] += 1;
+                        
+                        // Posición 3: Inferior derecha (x ~1, y ~0)
+                        let dist3 = Math.sqrt(Math.pow(x_norm - 0.98, 2) + Math.pow(y_norm - 0.02, 2));
+                        if (dist3 < 0.15) puntajes[3] += 1;
+                    }
+                    
+                    // Encontrar la posición con menor puntaje (menos puntos cerca)
+                    let mejorIndice = 0;
+                    for (let i = 1; i < puntajes.length; i++) {
+                        if (puntajes[i] < puntajes[mejorIndice]) {
+                            mejorIndice = i;
+                        }
+                    }
+                    
+                    // Si todas las posiciones están igual de ocupadas, usar lógica basada en pendiente
+                    if (puntajes.every(p => p === puntajes[0])) {
+                        // Lógica basada en la pendiente de la temperatura
+                        if (T_left > T_right) {
+                            // Temperatura decreciente: usar superior izquierda
+                            return posiciones[0];
+                        } else if (T_left < T_right) {
+                            // Temperatura creciente: usar superior derecha
+                            return posiciones[1];
+                        } else {
+                            // Temperatura constante
+                            if (T_left > 25) {
+                                // Temperatura alta: usar inferior izquierda
+                                return posiciones[2];
+                            } else {
+                                // Temperatura baja: usar superior izquierda
+                                return posiciones[0];
+                            }
+                        }
+                    }
+                    
+                    console.log(`🎯 Leyenda colocada en: ${posiciones[mejorIndice].desc} (puntaje: ${puntajes[mejorIndice]})`);
+                    return posiciones[mejorIndice];
+                }
+                
+                // Crear los traces de la gráfica
+                let traces = [];
+                
+                // PINN - Usar los datos del JSON
                 traces.push({
                     x: pred.x,
-                    y: pred.T_exact,
+                    y: pred.T_pinn,
                     type: 'scatter',
                     mode: 'lines',
-                    name: 'Solución exacta',
-                    line: { color: '#ff6b6b', width: 2, dash: 'dash' }
+                    name: 'PINN',
+                    line: { color: '#4da3ff', width: 3 }
                 });
-            }
-            
-            traces.push({
-                x: [0, 1],
-                y: [pred.T_left, pred.T_right],
-                type: 'scatter',
-                mode: 'markers',
-                name: 'Fronteras',
-                marker: { color: '#51cf66', size: 12 }
-            });
-            
-            Plotly.newPlot('solutionPlot', traces, {
-                title: `T(0)=${pred.T_left.toFixed(1)}, T(1)=${pred.T_right.toFixed(1)}`,
-                xaxis: { title: 'x', range: [0, 1] },
-                yaxis: { title: 'Temperatura' },
-                plot_bgcolor: 'rgba(0,0,0,0)',
-                paper_bgcolor: 'rgba(0,0,0,0)',
-                font: { color: '#cfd8ff' }
-            });
-            
-            // Gráfica de error
-            if (showError) {
-                Plotly.newPlot('errorPlot', [{
-                    x: pred.x,
-                    y: error,
+                
+                // Solución exacta - Calculada con los valores de los sliders
+                if (showExact) {
+                    traces.push({
+                        x: pred.x,
+                        y: T_exact,
+                        type: 'scatter',
+                        mode: 'lines',
+                        name: 'Solución exacta',
+                        line: { color: '#ff6b6b', width: 2, dash: 'dash' }
+                    });
+                }
+                
+                // Puntos de frontera - Usar los valores de los sliders
+                traces.push({
+                    x: [0, 1],
+                    y: [T_left, T_right],
                     type: 'scatter',
-                    mode: 'lines',
-                    fill: 'tozeroy',
-                    line: { color: '#ff6b6b' }
-                }], {
-                    title: `Error - Máx: ${error_max.toExponential(4)}`,
-                    xaxis: { title: 'x' },
-                    yaxis: { title: 'Error' },
+                    mode: 'markers',
+                    name: 'Condiciones de frontera',
+                    marker: { 
+                        color: '#51cf66', 
+                        size: 12,
+                        line: { color: '#ffffff', width: 2 }
+                    }
+                });
+                
+                // Encontrar la mejor posición para la leyenda
+                let legendPosition = encontrarMejorPosicionLegend(T_left, T_right, pred.T_pinn, pred.x);
+                
+                let layout = {
+                    title: `T(0)=${T_left.toFixed(1)}, T(1)=${T_right.toFixed(1)}`,
+                    xaxis: { 
+                        title: 'x', 
+                        range: [0, 1],
+                        gridcolor: 'rgba(255,255,255,0.05)',
+                        gridwidth: 0.5
+                    },
+                    yaxis: { 
+                        title: 'Temperatura',
+                        gridcolor: 'rgba(255,255,255,0.05)',
+                        gridwidth: 0.5
+                    },
                     plot_bgcolor: 'rgba(0,0,0,0)',
                     paper_bgcolor: 'rgba(0,0,0,0)',
-                    font: { color: '#cfd8ff' }
-                });
-                document.getElementById('errorPlotContainer').style.display = 'block';
-            } else {
-                document.getElementById('errorPlotContainer').style.display = 'none';
+                    font: { color: '#cfd8ff' },
+                    hovermode: 'x unified',
+                    legend: {
+                        x: legendPosition.x,
+                        y: legendPosition.y,
+                        xanchor: legendPosition.xanchor,
+                        yanchor: legendPosition.yanchor,
+                        bgcolor: 'rgba(18, 26, 48, 0.8)',
+                        bordercolor: 'rgba(77, 163, 255, 0.3)',
+                        borderwidth: 1,
+                        font: { color: '#ffffff', size: 11 }
+                    }
+                };
+                
+                Plotly.newPlot('solutionPlot', traces, layout);
+                
+                // Gráfica de error
+                if (showError) {
+                    Plotly.newPlot('errorPlot', [{
+                        x: pred.x,
+                        y: error,
+                        type: 'scatter',
+                        mode: 'lines',
+                        fill: 'tozeroy',
+                        fillcolor: 'rgba(255,107,107,0.3)',
+                        line: { color: '#ff6b6b', width: 2 }
+                    }], {
+                        title: `Error absoluto - Máx: ${error_max.toExponential(4)}`,
+                        xaxis: { 
+                            title: 'x',
+                            gridcolor: 'rgba(255,255,255,0.05)',
+                            gridwidth: 0.5
+                        },
+                        yaxis: { 
+                            title: 'Error',
+                            gridcolor: 'rgba(255,255,255,0.05)',
+                            gridwidth: 0.5
+                        },
+                        plot_bgcolor: 'rgba(0,0,0,0)',
+                        paper_bgcolor: 'rgba(0,0,0,0)',
+                        font: { color: '#cfd8ff' },
+                        showlegend: false
+                    });
+                    document.getElementById('errorPlotContainer').style.display = 'block';
+                } else {
+                    document.getElementById('errorPlotContainer').style.display = 'none';
+                }
             }
-        }
-
         // ===== INICIALIZAR =====
         document.addEventListener('DOMContentLoaded', cargarDatos);
         
