@@ -111,6 +111,7 @@ fetch('data/projects.json')
                         </div>
                         <div class="project-links">
                             <a href="${project.pageFile}" class="btn-small">Ver más</a>
+                            <a href="${project.codeLink}" target="_blank" class="btn-small">Código</a>
                         </div>
                     </div>
                 </div>
