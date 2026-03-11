@@ -1,16 +1,49 @@
-// Lista de componentes a cargar (solo header y footer para todas las páginas)
-const components = ['header', 'footer'];
+// ===== DETECTAR QUÉ PÁGINA ES =====
+function isHomePage() {
+    const path = window.location.pathname;
+    // Estamos en la página principal si:
+    // - Termina en index.html
+    // - Termina en /
+    // - Es la raíz del sitio
+    return path.endsWith('index.html') || path.endsWith('/') || path === '';
+}
 
-// Función para determinar la ruta base
+// ===== DETERMINAR RUTA BASE =====
 function getBasePath() {
     const path = window.location.pathname;
     if (path.includes('/pages/')) {
-        return '../'; // Estamos en subcarpeta
+        return '../'; // Estamos en subcarpeta (pages/proyectos/)
     }
     return ''; // Estamos en la raíz
 }
 
-// Función para cargar un componente
+// ===== LISTA DE COMPONENTES =====
+// Componentes que siempre van en todas las páginas
+const commonComponents = ['header', 'footer'];
+
+// Componentes que SOLO van en la página principal
+const homeComponents = [
+    'hero',
+    'sobre-mi',
+    'timeline',
+    'proyectos-destacados',
+    'investigacion-preview',
+    'ahora',
+    'blog-preview'
+];
+
+// Determinar qué componentes cargar
+function getComponentsToLoad() {
+    if (isHomePage()) {
+        console.log('📄 Página principal detectada - Cargando TODOS los componentes');
+        return [...commonComponents, ...homeComponents];
+    } else {
+        console.log('📄 Subpágina detectada - Cargando solo header y footer');
+        return commonComponents;
+    }
+}
+
+// ===== FUNCIÓN PARA CARGAR UN COMPONENTE =====
 async function loadComponent(component) {
     const basePath = getBasePath();
     const componentPath = `${basePath}components/${component}.html`;
@@ -36,34 +69,46 @@ async function loadComponent(component) {
     }
 }
 
-// Función para inicializar el menú hamburguesa
+// ===== FUNCIÓN PARA INICIALIZAR EL MENÚ HAMBURGUESA =====
 function initMobileMenu() {
     const hamburger = document.querySelector('.hamburger');
     const navMenu = document.querySelector('.nav-menu');
     
     if (!hamburger || !navMenu) return;
     
-    hamburger.addEventListener('click', function(e) {
+    // Remover event listeners anteriores
+    const newHamburger = hamburger.cloneNode(true);
+    hamburger.parentNode.replaceChild(newHamburger, hamburger);
+    const newNavMenu = navMenu.cloneNode(true);
+    navMenu.parentNode.replaceChild(newNavMenu, navMenu);
+    
+    newHamburger.addEventListener('click', function(e) {
         e.stopPropagation();
         this.classList.toggle('active');
-        navMenu.classList.toggle('active');
-        document.body.style.overflow = navMenu.classList.contains('active') ? 'hidden' : 'auto';
+        newNavMenu.classList.toggle('active');
+        document.body.style.overflow = newNavMenu.classList.contains('active') ? 'hidden' : 'auto';
     });
     
-    navMenu.querySelectorAll('a').forEach(link => {
+    newNavMenu.querySelectorAll('a').forEach(link => {
         link.addEventListener('click', () => {
-            hamburger.classList.remove('active');
-            navMenu.classList.remove('active');
+            newHamburger.classList.remove('active');
+            newNavMenu.classList.remove('active');
             document.body.style.overflow = 'auto';
         });
     });
 }
 
-// Cargar componentes
-Promise.all(components.map(component => loadComponent(component)))
-    .then(() => {
-        console.log('✅ Componentes cargados');
-    })
-    .catch(error => {
-        console.error('Error cargando componentes:', error);
-    });
+// ===== CARGAR COMPONENTES =====
+async function loadAllComponents() {
+    const componentsToLoad = getComponentsToLoad();
+    console.log('📦 Componentes a cargar:', componentsToLoad);
+    
+    await Promise.all(componentsToLoad.map(component => loadComponent(component)));
+    console.log('✅ Todos los componentes cargados');
+    
+    // Disparar evento para otras funciones
+    document.dispatchEvent(new Event('componentsLoaded'));
+}
+
+// ===== INICIAR =====
+document.addEventListener('DOMContentLoaded', loadAllComponents);
