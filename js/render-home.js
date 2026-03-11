@@ -96,7 +96,7 @@ fetch('data/projects.json')
         
         data.projects.filter(p => p.featured).forEach(project => {
             container.innerHTML += `
-                <div class="project-card" onclick="window.location.href='${project.pageFile}'">
+                <div class="project-card">
                     <div class="project-badge">${project.badge}</div>
                     <div class="project-image">
                         <img src="${project.image}" 
@@ -110,8 +110,8 @@ fetch('data/projects.json')
                             ${project.tags.map(tag => `<span>${tag}</span>`).join('')}
                         </div>
                         <div class="project-links">
-                            <a href="${project.pageFile}" class="btn-small">Ver más</a>
-                            <a href="${project.codeLink}" target="_blank" class="btn-small">Código</a>
+                            <a href="pages/proyectos/${project.pageFile}" class="btn-small">Ver más</a>
+                            <a href="${project.codeLink}" target="_blank" class="btn-small" ${!project.codeLink ? 'style="pointer-events: none; opacity: 0.5;"' : ''}>Código</a>
                         </div>
                     </div>
                 </div>
