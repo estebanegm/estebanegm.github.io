@@ -2,13 +2,13 @@
     "projects": [
         {
             "title": "PINN con Condiciones de Frontera Variables",
-            "description": "Extensión de tesis: Red Neuronal Físicamente Informada para ecuación de calor 1D con condiciones de frontera variables.",
+            "description": "Extensión de tesis: Solución de la ecuación de calor unidimensional estacionaria empleando una red neuronal físicamente informada",
             "badge": "Investigación",
             "featured": true,
             "tags": ["Python", "TensorFlow", "PINNs", "EDPs"],
             "pageFile": "pinn-variable-bc.html",
-            "codeLink": "https://github.com/tuusuario/pinn-variable",
-            "canvasId": "pinn-canvas"
+            "codeLink": "https://colab.research.google.com/drive/1pB9dIhdLsUzz1cTCKz5qYoqSIZe7vInx?usp=sharing",
+            "image": "assets/images/proyectos/pinn.jpg"
         },
         {
             "title": "Análisis de Modelos Cosmológicos",
@@ -17,18 +17,18 @@
             "featured": true,
             "tags": ["Python", "CLASS", "Monte Python", "MCMC"],
             "pageFile": "cosmology-class.html",
-            "codeLink": "https://github.com/tuusuario/cosmology-class",
-            "canvasId": "cosmology-canvas"
+            "codeLink": "",
+            "image": "assets/images/proyectos/cosmologia.jpg"
         },
         {
-            "title": "Rubik's Stats Tracker",
+            "title": "Cubing Stats",
             "description": "Aplicación para análisis estadístico de tiempos en speedcubing. Visualización de progreso, gráficas de evolución y métricas de mejora.",
             "badge": "App Personal",
             "featured": true,
             "tags": ["Python", "Pandas", "Plotly", "Streamlit"],
             "pageFile": "rubik-stats-app.html",
-            "codeLink": "https://github.com/tuusuario/rubik-stats",
-            "canvasId": "rubik-canvas"
+            "codeLink": "https://cubingstats.streamlit.app/",
+            "image": "assets/images/proyectos/cubing-stats.jpg"
         }
     ]
 }
