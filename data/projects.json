@@ -6,7 +6,7 @@
             "badge": "Investigación",
             "featured": true,
             "tags": ["Python", "TensorFlow", "PINNs", "EDPs"],
-            "pageFile": "pinn-variable-bc.html",
+            "pageFile": "pages/proyectos/pinn-variable-bc.html",
             "codeLink": "https://colab.research.google.com/drive/1pB9dIhdLsUzz1cTCKz5qYoqSIZe7vInx?usp=sharing",
             "image": "assets/images/proyectos/pinn.png"
         },
@@ -16,7 +16,7 @@
             "badge": "Cosmología",
             "featured": true,
             "tags": ["Python", "CLASS", "Monte Python", "MCMC"],
-            "pageFile": "cosmology-class.html",
+            "pageFile": "pages/proyectos/cosmology-class.html",
             "codeLink": "",
             "image": "assets/images/proyectos/cosmologia.png"
         },
@@ -26,7 +26,7 @@
             "badge": "App Personal",
             "featured": true,
             "tags": ["Python", "Pandas", "Plotly", "Streamlit"],
-            "pageFile": "rubik-stats-app.html",
+            "pageFile": "pages/proyectos/rubik-stats-app.html",
             "codeLink": "https://cubingstats.streamlit.app/",
             "image": "assets/images/proyectos/cubing-stats.png"
         }
