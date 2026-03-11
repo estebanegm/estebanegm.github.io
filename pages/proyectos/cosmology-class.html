@@ -87,15 +87,40 @@
             font-size: 0.9rem;
             border: 1px solid rgba(77, 163, 255, 0.2);
         }
-        .code-block {
+        .figure-placeholder {
+            background: var(--bg-primary);
+            padding: 30px;
+            border-radius: 15px;
+            margin: 30px 0;
+            text-align: center;
+            border: 1px solid rgba(77, 163, 255, 0.2);
+        }
+        .figure-placeholder i {
+            font-size: 4rem;
+            color: var(--accent-primary);
+            opacity: 0.5;
+            margin-bottom: 15px;
+        }
+        .figure-caption {
+            color: var(--text-footer);
+            font-size: 0.9rem;
+            font-style: italic;
+        }
+        .results-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin: 30px 0;
+        }
+        .result-card {
             background: var(--bg-primary);
             padding: 20px;
-            border-radius: 10px;
-            border-left: 3px solid var(--accent-primary);
-            margin: 20px 0;
-            font-family: 'Courier New', monospace;
-            color: var(--text-secondary);
-            overflow-x: auto;
+            border-radius: 12px;
+            border: 1px solid rgba(77, 163, 255, 0.2);
+        }
+        .result-card h4 {
+            color: var(--accent-primary);
+            margin-bottom: 15px;
         }
         .btn-group {
             display: flex;
@@ -108,25 +133,10 @@
             min-width: 200px;
             text-align: center;
         }
-        .btn-small {
-            padding: 0.4rem 1rem;
-            background: var(--accent-primary);
-            color: var(--bg-primary);
-            text-decoration: none;
-            border-radius: 5px;
-            font-size: 0.9rem;
-            transition: var(--transition);
-            border: 1px solid var(--accent-primary);
-            display: inline-block;
-        }
-        .btn-small:hover {
-            background: transparent;
-            color: var(--accent-primary);
-        }
-        .btn-small.disabled {
+        .btn.disabled {
             opacity: 0.5;
-            cursor: not-allowed;
             pointer-events: none;
+            cursor: not-allowed;
         }
         @media (max-width: 768px) {
             .project-header h1 {
@@ -148,7 +158,7 @@
         <div class="project-header">
             <div class="container">
                 <h1>Cosmología Numérica y Observacional</h1>
-                <p class="project-subtitle">Estudio de modelos cosmológicos mediante inferencia bayesiana y simulaciones numéricas</p>
+                <p class="project-subtitle">Análisis de modelos cosmológicos con CLASS y Monte Python</p>
             </div>
         </div>
 
@@ -162,20 +172,20 @@
                     </div>
 
                     <h2>📖 Descripción del Proyecto</h2>
-                    <p>Este proyecto ofrece una formación integral en cosmología moderna, combinando aspectos teóricos, numéricos y observacionales. El objetivo central es desarrollar las herramientas necesarias para comprender y analizar los modelos que describen la evolución del universo, con especial énfasis en materia oscura, energía oscura e inflación cósmica.</p>
+                    <p>Este proyecto de investigación se centra en el estudio de modelos cosmológicos mediante herramientas computacionales de vanguardia. Se busca comprender la evolución del universo a través del análisis de sus componentes fundamentales: materia oscura, energía oscura y radiación, utilizando datos observacionales y simulaciones numéricas.</p>
                     
-                    <p>En la primera etapa, se abordan los fundamentos teóricos de la cosmología física, incluyendo la dinámica de la expansión cósmica, la formación de estructuras y el papel de los distintos componentes del universo. Posteriormente, se introducen las bases de la estadística bayesiana, indispensable para la inferencia de parámetros cosmológicos y la confrontación de modelos con observaciones.</p>
+                    <p>Actualmente, se están realizando las primeras corridas con el código <strong>CLASS</strong> (Cosmic Linear Anisotropy Solving System) para calcular observables cosmológicos como el factor de escala, el parámetro de Hubble y las densidades de los distintos componentes. Se ha comenzado explorando el modelo estándar ΛCDM, variando parámetros como Ω<sub>cdm</sub> para analizar su impacto en la dinámica cosmológica.</p>
                     
-                    <p>La parte computacional del proyecto se centra en el uso de software de vanguardia ampliamente utilizado en la comunidad de cosmología. Se emplea el código <strong>CLASS</strong> (Cosmic Linear Anisotropy Solving System) para calcular observables cosmológicos como espectros de potencias y funciones de correlación. Asimismo, se utiliza <strong>MontePython</strong>, un paquete de análisis bayesiano, para realizar ajustes de parámetros a datos observacionales provenientes de misiones actuales, como Planck, encuestas de galaxias y observaciones de lentes gravitacionales.</p>
+                    <p>Como siguiente etapa, se implementará <strong>Monte Python</strong> para realizar inferencia bayesiana y restringir los parámetros del modelo utilizando datos observacionales de misiones como Planck, encuestas de galaxias (BAO) y supernovas tipo Ia. Esto permitirá no solo validar el modelo ΛCDM, sino también explorar modelos alternativos de materia oscura y energía oscura, evaluando su viabilidad cosmológica.</p>
                     
-                    <p>El proyecto fomenta una aproximación crítica, donde se explorará cómo distintos modelos de materia oscura, energía oscura e inflación afectan la dinámica cósmica y las huellas observacionales. A través de esta experiencia, se adquieren competencias en programación científica, análisis estadístico y uso de datos reales, habilidades clave para la investigación en física teórica y experimental.</p>
+                    <p>El proyecto tiene como objetivo final desarrollar las habilidades necesarias para la investigación en cosmología computacional, desde la generación de espectros de potencia hasta el análisis estadístico de cadenas MCMC, contribuyendo así a la comprensión de preguntas fundamentales sobre el origen y evolución del universo.</p>
 
                     <div class="tech-tags">
                         <span class="tech-tag">Python</span>
                         <span class="tech-tag">CLASS</span>
                         <span class="tech-tag">Monte Python</span>
                         <span class="tech-tag">MCMC</span>
-                        <span class="tech-tag">Cosmología</span>
+                        <span class="tech-tag">ΛCDM</span>
                         <span class="tech-tag">Inferencia Bayesiana</span>
                         <span class="tech-tag">Planck</span>
                         <span class="tech-tag">BAO</span>
@@ -186,73 +196,126 @@
                 <div class="project-section">
                     <h2>🎯 Objetivos</h2>
                     
-                    <h3>Objetivos Generales</h3>
-                    <p>Aprender cosmología como un área de la física, desde su formalismo teórico fundamentado en la interacción gravitacional a gran escala hasta su implementación numérica en códigos especializados y análisis de modelos con el uso de datos observacionales.</p>
+                    <h3>Objetivo General</h3>
+                    <p>Desarrollar un análisis integral de modelos cosmológicos mediante herramientas computacionales, combinando la teoría de la evolución del universo con la inferencia estadística de parámetros a partir de datos observacionales.</p>
                     
                     <h3>Objetivos Específicos</h3>
-                    <ol style="color: var(--text-secondary);">
-                        <li><strong>Revisión bibliográfica.</strong> Estudio de los textos fundamentales de cosmología, con énfasis en el marco del modelo estándar ΛCDM.</li>
-                        <li><strong>Resolución de ejercicios.</strong> Aplicación de los conceptos teóricos y análisis físico de los resultados.</li>
-                        <li><strong>Instalación y uso de CLASS.</strong> Compilación y ejecución del código para el modelo ΛCDM, variando parámetros y familiarizándose con su sintaxis.</li>
-                        <li><strong>Análisis de soluciones numéricas.</strong> Generación de gráficas con las soluciones obtenidas y comparación con resultados publicados (Planck 2018, SH0ES).</li>
-                        <li><strong>Estadística Bayesiana.</strong> Revisión del Teorema de Bayes y su implementación para inferencia de parámetros cosmológicos.</li>
-                        <li><strong>Instalación y uso de Monte Python.</strong> Restricción de parámetros cosmológicos del modelo ΛCDM usando datos de CMB, BAO y Supernovas Tipo Ia.</li>
-                        <li><strong>Implementación de modelo alternativo.</strong> Propuesta y análisis de un modelo distinto a ΛCDM para evaluar su viabilidad cosmológica.</li>
-                        <li><strong>Publicación de resultados.</strong> Redacción de un manuscrito para su envío a una revista internacional.</li>
-                    </ol>
+                    <ul style="color: var(--text-secondary);">
+                        <li>Familiarizarse con el código CLASS para generar soluciones numéricas del modelo ΛCDM y visualizar la evolución de parámetros cosmológicos fundamentales.</li>
+                        <li>Analizar el impacto de variaciones en parámetros como Ω<sub>cdm</sub> sobre las densidades de materia, radiación y energía oscura, así como sobre el módulo de distancia.</li>
+                        <li>Comparar las predicciones teóricas con datos observacionales de supernovas tipo Ia (Union2.1) para validar los modelos generados.</li>
+                        <li>Estudiar los fundamentos de la estadística bayesiana y su aplicación en la inferencia de parámetros cosmológicos.</li>
+                        <li>Implementar Monte Python para realizar cadenas MCMC y restringir los parámetros del modelo ΛCDM usando datos de CMB, BAO y supernovas.</li>
+                        <li>Explorar al menos un modelo alternativo de materia oscura o energía oscura, evaluando su consistencia con las observaciones actuales.</li>
+                    </ul>
                 </div>
 
                 <!-- Metodología (resumida) -->
                 <div class="project-section">
                     <h2>🔭 Metodología</h2>
                     
-                    <h3>1. Cálculo del espectro de potencia con CLASS</h3>
-                    <p>CLASS resuelve las ecuaciones de perturbación cosmológica para calcular el espectro de potencia de materia P(k) y las funciones de correlación de los modos escalares y tensoriales.</p>
+                    <h3>1. Generación de observables con CLASS</h3>
+                    <p>Se utiliza el código CLASS para resolver las ecuaciones de Friedmann y calcular la evolución del factor de escala, el parámetro de Hubble y las densidades de los distintos componentes del universo (fotones, bariones, materia oscura, energía oscura, etc.). Se exploran diferentes valores de Ω<sub>cdm</sub> para analizar su efecto en la dinámica cosmológica.</p>
 
-                    <div class="code-block">
-                        <pre><code># Parámetros de entrada para CLASS (ejemplo)
-omega_b = 0.02242
-omega_cdm = 0.11933
-h = 0.6766
-ns = 0.9665
-ln10^{10}A_s = 3.047</code></pre>
+                    <h3>2. Visualización y análisis</h3>
+                    <p>Los resultados se visualizan en gráficas que muestran la evolución de parámetros clave en función del redshift o del factor de escala, permitiendo identificar regímenes de dominancia (radiación, materia, energía oscura) y comparar con resultados reportados en la literatura.</p>
+
+                    <h3>3. Comparación con datos observacionales</h3>
+                    <p>Se contrastan las predicciones teóricas del módulo de distancia con datos reales de supernovas tipo Ia (catálogo Union2.1), evaluando la calidad del ajuste para distintos valores de los parámetros cosmológicos.</p>
+
+                    <h3>4. Inferencia bayesiana con Monte Python</h3>
+                    <p>Una vez familiarizado con los fundamentos de la estadística bayesiana, se implementará Monte Python para realizar cadenas MCMC y obtener las regiones de probabilidad para los parámetros del modelo ΛCDM, utilizando datos de Planck, BAO y supernovas.</p>
+                </div>
+
+                <!-- Resultados Preliminares (basados en tu reporte) -->
+                <div class="project-section">
+                    <h2>📊 Resultados Preliminares</h2>
+                    
+                    <p>Se han realizado las primeras corridas con CLASS para el modelo ΛCDM, obteniendo las siguientes visualizaciones:</p>
+                    
+                    <div class="results-grid">
+                        <div class="result-card">
+                            <h4>Factor de escala a(z)</h4>
+                            <div class="figure-placeholder">
+                                <i class="fas fa-chart-line"></i>
+                            </div>
+                            <p class="figure-caption">Evolución del factor de escala en función del redshift. Se observa un comportamiento lineal para z > 1.</p>
+                        </div>
+                        
+                        <div class="result-card">
+                            <h4>Parámetro de Hubble H(a)</h4>
+                            <div class="figure-placeholder">
+                                <i class="fas fa-chart-line"></i>
+                            </div>
+                            <p class="figure-caption">H(a) crece hacia el pasado (a ≪ 1), consistente con un universo en expansión. El valor actual H₀ ≈ 67.8 km/s/Mpc se muestra como referencia.</p>
+                        </div>
+                        
+                        <div class="result-card">
+                            <h4>Densidades ρ(a)</h4>
+                            <div class="figure-placeholder">
+                                <i class="fas fa-chart-line"></i>
+                            </div>
+                            <p class="figure-caption">Evolución de las densidades de radiación, materia y energía oscura. Se observa la transición entre regímenes de dominancia.</p>
+                        </div>
+                        
+                        <div class="result-card">
+                            <h4>Transición materia-energía oscura</h4>
+                            <div class="figure-placeholder">
+                                <i class="fas fa-chart-line"></i>
+                            </div>
+                            <p class="figure-caption">Ωₘ domina para a &lt; 0.7, mientras que Ω<sub>Λ</sub> domina en la época actual (a = 1).</p>
+                        </div>
+                        
+                        <div class="result-card">
+                            <h4>Módulo de distancia μ(z)</h4>
+                            <div class="figure-placeholder">
+                                <i class="fas fa-chart-line"></i>
+                            </div>
+                            <p class="figure-caption">Comparación del modelo con datos de supernovas Union2.1. La concordancia valida los parámetros utilizados.</p>
+                        </div>
+                        
+                        <div class="result-card">
+                            <h4>Variación de Ω<sub>cdm</sub></h4>
+                            <div class="figure-placeholder">
+                                <i class="fas fa-table"></i>
+                            </div>
+                            <p class="figure-caption">Al variar Ω<sub>cdm</sub> se obtienen diferentes combinaciones de Ωₘ, Ω<sub>Λ</sub> y Ω<sub>r</sub>, mostrando cómo cambia la composición del universo.</p>
+                        </div>
                     </div>
-
-                    <h3>2. Inferencia bayesiana con Monte Python</h3>
-                    <p>Monte Python utiliza algoritmos MCMC para explorar el espacio de parámetros y encontrar las regiones más probables dadas las observaciones (Planck, BAO, SNIa).</p>
-
-                    <div class="code-block">
-                        <pre><code># Ejemplo de cadena MCMC
-# Los resultados se analizan con GetDist
-# Se generan corner plots y cadenas de convergencia</code></pre>
-                    </div>
+                    
+                    <p>Los resultados obtenidos hasta ahora muestran una buena concordancia con lo reportado en la literatura, particularmente en la comparación del módulo de distancia con los datos de supernovas Union2.1. Las curvas teóricas para diferentes valores de Ω<sub>cdm</sub> son prácticamente indistinguibles en el rango de bajos redshifts (z < 0.4), lo cual es esperado ya que en esta región la expansión está dominada por H₀ y la dependencia en los parámetros de densidad es mínima.</p>
                 </div>
 
                 <!-- Estado actual -->
                 <div class="project-section">
-                    <h2>📊 Estado Actual</h2>
-                    <p>El proyecto se encuentra en desarrollo activo. Actualmente se están realizando las primeras corridas con CLASS y Monte Python para el modelo ΛCDM, así como la exploración de modelos alternativos de materia oscura.</p>
+                    <h2>⚙️ Estado Actual</h2>
                     
                     <ul style="color: var(--text-secondary);">
-                        <li>✅ Revisión bibliográfica completada</li>
-                        <li>✅ Instalación y compilación de CLASS y Monte Python</li>
-                        <li>🔄 Pruebas iniciales con CLASS para el modelo ΛCDM</li>
-                        <li>⏳ Análisis de cadenas MCMC con Monte Python</li>
-                        <li>⏳ Implementación de modelos alternativos</li>
+                        <li><span style="color: #4CAF50;">✓</span> Revisión bibliográfica completada</li>
+                        <li><span style="color: #4CAF50;">✓</span> Instalación y compilación de CLASS exitosa</li>
+                        <li><span style="color: #4CAF50;">✓</span> Pruebas iniciales con CLASS para el modelo ΛCDM finalizadas</li>
+                        <li><span style="color: #4CAF50;">✓</span> Generación de gráficas de evolución cosmológica (factor de escala, H(a), densidades)</li>
+                        <li><span style="color: #4CAF50;">✓</span> Comparación con datos de supernovas Union2.1 realizada</li>
+                        <li><span style="color: #2196F3;">🔄</span> Estudio de fundamentos de estadística bayesiana (en curso)</li>
+                        <li><span style="color: #FF9800;">⏳</span> Implementación de Monte Python (próximamente)</li>
+                        <li><span style="color: #FF9800;">⏳</span> Análisis de cadenas MCMC (próximamente)</li>
+                        <li><span style="color: #FF9800;">⏳</span> Exploración de modelos alternativos de materia oscura (próximamente)</li>
                     </ul>
+                    
+                    <p style="margin-top: 20px;">Actualmente me encuentro en la etapa de estudio de los fundamentos de estadística bayesiana, paso necesario antes de proceder con la implementación de Monte Python para la inferencia de parámetros cosmológicos.</p>
                 </div>
 
-                <!-- Enlaces (con botones inhabilitados) -->
+                <!-- Enlaces (inhabilitados) -->
                 <div class="project-section" style="text-align: center;">
                     <h2>🔗 Enlaces</h2>
                     <div class="btn-group">
-                        <a href="#" class="btn btn-primary disabled" style="opacity: 0.5; pointer-events: none; cursor: not-allowed;">
+                        <a href="#" class="btn btn-primary disabled">
                             <i class="fab fa-github"></i> Código (Próximamente)
                         </a>
-                        <a href="#" class="btn btn-secondary disabled" style="opacity: 0.5; pointer-events: none; cursor: not-allowed;">
+                        <a href="#" class="btn btn-secondary disabled">
                             <i class="fas fa-file-pdf"></i> Notas técnicas (Próximamente)
                         </a>
-                        <a href="#" class="btn btn-secondary disabled" style="opacity: 0.5; pointer-events: none; cursor: not-allowed;">
+                        <a href="#" class="btn btn-secondary disabled">
                             <i class="fas fa-play"></i> Colab (Próximamente)
                         </a>
                     </div>
