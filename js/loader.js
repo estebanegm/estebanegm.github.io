@@ -11,10 +11,16 @@ function isHomePage() {
 // ===== DETERMINAR RUTA BASE =====
 function getBasePath() {
     const path = window.location.pathname;
-    if (path.includes('/pages/')) {
-        return '../'; // Estamos en subcarpeta (pages/proyectos/)
+    // Contar cuántos niveles de profundidad hay
+    const depth = (path.match(/\//g) || []).length - 1;
+    
+    if (depth >= 2) { // Estamos en /pages/proyectos/ o más profundo
+        return '../../'; // Subir dos niveles
+    } else if (depth === 1) { // Estamos en /pages/
+        return '../'; // Subir un nivel
+    } else {
+        return ''; // Estamos en la raíz
     }
-    return ''; // Estamos en la raíz
 }
 
 // ===== LISTA DE COMPONENTES =====
