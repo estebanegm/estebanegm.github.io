@@ -106,7 +106,7 @@ async function loadAllComponents() {
     await Promise.all(componentsToLoad.map(component => loadComponent(component)));
     console.log('✅ Todos los componentes cargados');
     
-    // Disparar evento para otras funciones
+    // 🔥 ESTO ES LO IMPORTANTE - Disparar evento
     document.dispatchEvent(new Event('componentsLoaded'));
 }
 
