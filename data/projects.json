@@ -8,7 +8,7 @@
             "tags": ["Python", "TensorFlow", "PINNs", "EDPs"],
             "pageFile": "pinn-variable-bc.html",
             "codeLink": "https://colab.research.google.com/drive/1pB9dIhdLsUzz1cTCKz5qYoqSIZe7vInx?usp=sharing",
-            "image": "assets/images/proyectos/pinn.jpg"
+            "image": "assets/images/proyectos/pinn.png"
         },
         {
             "title": "Análisis de Modelos Cosmológicos",
@@ -18,7 +18,7 @@
             "tags": ["Python", "CLASS", "Monte Python", "MCMC"],
             "pageFile": "cosmology-class.html",
             "codeLink": "",
-            "image": "assets/images/proyectos/cosmologia.jpg"
+            "image": "assets/images/proyectos/cosmologia.png"
         },
         {
             "title": "Cubing Stats",
@@ -28,7 +28,7 @@
             "tags": ["Python", "Pandas", "Plotly", "Streamlit"],
             "pageFile": "rubik-stats-app.html",
             "codeLink": "https://cubingstats.streamlit.app/",
-            "image": "assets/images/proyectos/cubing-stats.jpg"
+            "image": "assets/images/proyectos/cubing-stats.png"
         }
     ]
 }
