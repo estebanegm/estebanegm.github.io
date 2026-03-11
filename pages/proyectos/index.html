@@ -12,8 +12,128 @@
             padding: 120px 0 60px;
             text-align: center;
         }
+        .projects-header h1 {
+            font-size: 2.8rem;
+            margin-bottom: 1rem;
+        }
+        .projects-header p {
+            color: var(--text-secondary);
+            font-size: 1.2rem;
+        }
         .projects-grid {
             padding: 60px 0;
+        }
+        .projects-grid .container {
+            max-width: 1400px;
+        }
+        .projects-grid .projects-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 2rem;
+        }
+        .project-card {
+            background: var(--bg-secondary);
+            border-radius: 15px;
+            overflow: hidden;
+            transition: var(--transition);
+            cursor: pointer;
+            position: relative;
+            border: 1px solid rgba(77, 163, 255, 0.1);
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+        }
+        .project-card:hover {
+            transform: translateY(-10px);
+            border-color: var(--accent-primary);
+            box-shadow: var(--card-shadow);
+        }
+        .project-badge {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            background: var(--accent-primary);
+            color: var(--bg-primary);
+            padding: 0.3rem 1rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            z-index: 1;
+        }
+        .project-image {
+            height: 200px;
+            overflow: hidden;
+            background: var(--bg-primary);
+        }
+        .project-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.3s ease;
+        }
+        .project-card:hover .project-image img {
+            transform: scale(1.05);
+        }
+        .project-info {
+            padding: 1.5rem;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+        .project-info h3 {
+            margin-bottom: 0.5rem;
+            color: var(--text-primary);
+            font-size: 1.2rem;
+        }
+        .project-info p {
+            color: var(--text-secondary);
+            margin-bottom: 1rem;
+            font-size: 0.95rem;
+            flex: 1;
+        }
+        .project-tech {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+        }
+        .project-tech span {
+            background: rgba(77, 163, 255, 0.1);
+            color: var(--accent-primary);
+            padding: 0.2rem 0.8rem;
+            border-radius: 15px;
+            font-size: 0.8rem;
+        }
+        .project-links {
+            display: flex;
+            gap: 1rem;
+            margin-top: auto;
+        }
+        .btn-small {
+            padding: 0.4rem 1rem;
+            background: var(--accent-primary);
+            color: var(--bg-primary);
+            text-decoration: none;
+            border-radius: 5px;
+            font-size: 0.9rem;
+            transition: var(--transition);
+            border: 1px solid var(--accent-primary);
+            display: inline-block;
+        }
+        .btn-small:hover {
+            background: transparent;
+            color: var(--accent-primary);
+        }
+        @media (max-width: 768px) {
+            .projects-header h1 {
+                font-size: 2rem;
+            }
+            .projects-header p {
+                font-size: 1rem;
+            }
+            .projects-grid .projects-grid {
+                grid-template-columns: 1fr;
+            }
         }
     </style>
 </head>
@@ -30,64 +150,118 @@
 
         <div class="projects-grid">
             <div class="container">
-                <div class="projects-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(350px, 1fr)); gap: 2rem;">
+                <div class="projects-grid">
                     
+                    <!-- Proyecto 1: PINN -->
                     <div class="project-card" onclick="window.location.href='pinn-variable-bc.html'">
                         <div class="project-badge">Investigación</div>
                         <div class="project-image">
-                            <div style="height: 200px; background: linear-gradient(45deg, var(--bg-primary), var(--bg-secondary)); display: flex; align-items: center; justify-content: center;">
-                                <i class="fas fa-brain" style="font-size: 3rem; color: var(--accent-primary);"></i>
-                            </div>
+                            <img src="../../assets/images/proyectos/pinn.png" 
+                                 alt="PINN" 
+                                 onerror="this.onerror=null; this.style.display='none'; this.parentNode.innerHTML += '<div style=\'height: 200px; background: linear-gradient(45deg, var(--bg-primary), var(--bg-secondary)); display: flex; align-items: center; justify-content: center;\'><i class=\'fas fa-brain\' style=\'font-size: 3rem; color: var(--accent-primary);\'></i></div>';"
+                                 style="width: 100%; height: 100%; object-fit: cover;">
                         </div>
                         <div class="project-info">
                             <h3>PINN con Condiciones de Frontera Variables</h3>
                             <p>Extensión de tesis: Red Neuronal Físicamente Informada para ecuación de calor 1D con condiciones variables.</p>
                             <div class="project-tech">
-                                <span>Python</span><span>TensorFlow</span><span>PINNs</span>
+                                <span>Python</span><span>PyTorch</span><span>PINNs</span><span>EDPs</span>
                             </div>
                             <div class="project-links">
-                                <a href="pinn-variable-bc.html" class="btn-small">Ver más</a>
+                                <a href="pinn-variable-bc.html" class="btn-small" onclick="event.stopPropagation()">Ver más</a>
+                                <a href="https://colab.research.google.com/drive/1pB9dIhdLsUzz1cTCKz5qYoqSIZe7vInx?usp=sharing" target="_blank" class="btn-small" onclick="event.stopPropagation()">Código</a>
                             </div>
                         </div>
                     </div>
 
+                    <!-- Proyecto 2: Cosmología -->
                     <div class="project-card" onclick="window.location.href='cosmology-class.html'">
                         <div class="project-badge">Cosmología</div>
                         <div class="project-image">
-                            <div style="height: 200px; background: linear-gradient(45deg, var(--bg-primary), var(--bg-secondary)); display: flex; align-items: center; justify-content: center;">
-                                <i class="fas fa-globe" style="font-size: 3rem; color: var(--accent-primary);"></i>
-                            </div>
+                            <img src="../../assets/images/proyectos/cosmologia.png" 
+                                 alt="Cosmología" 
+                                 onerror="this.onerror=null; this.style.display='none'; this.parentNode.innerHTML += '<div style=\'height: 200px; background: linear-gradient(45deg, var(--bg-primary), var(--bg-secondary)); display: flex; align-items: center; justify-content: center;\'><i class=\'fas fa-globe\' style=\'font-size: 3rem; color: var(--accent-primary);\'></i></div>';"
+                                 style="width: 100%; height: 100%; object-fit: cover;">
                         </div>
                         <div class="project-info">
                             <h3>Análisis de Modelos Cosmológicos</h3>
                             <p>Estudio de parámetros cosmológicos usando CLASS + Monte Python e inferencia bayesiana.</p>
                             <div class="project-tech">
-                                <span>Python</span><span>CLASS</span><span>MCMC</span>
+                                <span>Python</span><span>CLASS</span><span>MCMC</span><span>Cosmología</span>
                             </div>
                             <div class="project-links">
-                                <a href="cosmology-class.html" class="btn-small">Ver más</a>
+                                <a href="cosmology-class.html" class="btn-small" onclick="event.stopPropagation()">Ver más</a>
+                                <a href="#" class="btn-small" onclick="event.stopPropagation()" style="opacity: 0.5; pointer-events: none;">Código</a>
                             </div>
                         </div>
                     </div>
 
+                    <!-- Proyecto 3: Cubing Stats -->
                     <div class="project-card" onclick="window.location.href='rubik-stats-app.html'">
                         <div class="project-badge">App Personal</div>
                         <div class="project-image">
-                            <div style="height: 200px; background: linear-gradient(45deg, var(--bg-primary), var(--bg-secondary)); display: flex; align-items: center; justify-content: center;">
-                                <i class="fas fa-cube" style="font-size: 3rem; color: var(--accent-primary);"></i>
-                            </div>
+                            <img src="../../assets/images/proyectos/cubing-stats.png" 
+                                 alt="Cubing Stats" 
+                                 onerror="this.onerror=null; this.style.display='none'; this.parentNode.innerHTML += '<div style=\'height: 200px; background: linear-gradient(45deg, var(--bg-primary), var(--bg-secondary)); display: flex; align-items: center; justify-content: center;\'><i class=\'fas fa-cube\' style=\'font-size: 3rem; color: var(--accent-primary);\'></i></div>';"
+                                 style="width: 100%; height: 100%; object-fit: cover;">
                         </div>
                         <div class="project-info">
-                            <h3>Rubik's Stats Tracker</h3>
-                            <p>Aplicación para análisis estadístico de tiempos en speedcubing.</p>
+                            <h3>Cubing Stats</h3>
+                            <p>Aplicación para análisis estadístico de tiempos en speedcubing con visualizaciones interactivas.</p>
                             <div class="project-tech">
-                                <span>Python</span><span>Pandas</span><span>Plotly</span>
+                                <span>Python</span><span>Streamlit</span><span>Pandas</span><span>Plotly</span>
                             </div>
                             <div class="project-links">
-                                <a href="rubik-stats-app.html" class="btn-small">Ver más</a>
+                                <a href="rubik-stats-app.html" class="btn-small" onclick="event.stopPropagation()">Ver más</a>
+                                <a href="https://cubingstats.streamlit.app/" target="_blank" class="btn-small" onclick="event.stopPropagation()">App</a>
                             </div>
                         </div>
                     </div>
+
+                    <!-- NUEVO Proyecto 4: Redes Neuronales para EDPs -->
+                    <div class="project-card" onclick="window.location.href='ann-edp.html'">
+                        <div class="project-badge">Machine Learning</div>
+                        <div class="project-image">
+                            <img src="../../assets/images/proyectos/DE_NN.png" 
+                                 alt="ANN para EDPs" 
+                                 onerror="this.onerror=null; this.style.display='none'; this.parentNode.innerHTML += '<div style=\'height: 200px; background: linear-gradient(45deg, var(--bg-primary), var(--bg-secondary)); display: flex; align-items: center; justify-content: center;\'><i class=\'fas fa-project-diagram\' style=\'font-size: 3rem; color: var(--accent-primary);\'></i></div>';"
+                                 style="width: 100%; height: 100%; object-fit: cover;">
+                        </div>
+                        <div class="project-info">
+                            <h3>Aplicación de Redes Neuronales para EDPs</h3>
+                            <p>Implementación de redes neuronales artificiales para resolver el oscilador armónico 1D y la ecuación de Poisson 2D usando TensorFlow y Keras.</p>
+                            <div class="project-tech">
+                                <span>Python</span><span>TensorFlow</span><span>Keras</span><span>EDPs</span><span>Oscilador Armónico</span><span>Poisson 2D</span>
+                            </div>
+                            <div class="project-links">
+                                <a href="ann-edp.html" class="btn-small" onclick="event.stopPropagation()">Ver más</a>
+                                <a href="#" class="btn-small" onclick="event.stopPropagation()" style="opacity: 0.5; pointer-events: none;">Código</a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- NUEVO Proyecto 5: Predicción Afluencia Metro CDMX -->
+                    <div class="project-card" onclick="window.location.href='metro-cdmx.html'">
+                        <div class="project-badge">Ciencia de Datos</div>
+                        <div class="project-image">
+                            <img src="../../assets/images/proyectos/metro.png" 
+                                 alt="Metro CDMX" 
+                                 onerror="this.onerror=null; this.style.display='none'; this.parentNode.innerHTML += '<div style=\'height: 200px; background: linear-gradient(45deg, var(--bg-primary), var(--bg-secondary)); display: flex; align-items: center; justify-content: center;\'><i class=\'fas fa-subway\' style=\'font-size: 3rem; color: var(--accent-primary);\'></i></div>';"
+                                 style="width: 100%; height: 100%; object-fit: cover;">
+                        </div>
+                        <div class="project-info">
+                            <h3>Predicción de Afluencia Metro CDMX</h3>
+                            <p>Modelos predictivos para estimar la afluencia de usuarios en el Metro de la CDMX integrando variables temporales y externas usando KNN, Árboles de Decisión, MLP, Series de Tiempo y CNN.</p>
+                            <div class="project-tech">
+                                <span>Python</span><span>KNN</span><span>Árboles</span><span>MLP</span><span>Series de Tiempo</span><span>CNN</span><span>LeNet-5</span>
+                            </div>
+                            <div class="project-links">
+                                <a href="metro-cdmx.html" class="btn-small" onclick="event.stopPropagation()">Ver más</a>
+                                <a href="https://colab.research.google.com/drive/1KjV2Jm-fnmccBxQHIboHIMm23eNyOeFV?usp=sharing" target="_blank" class="btn-small" onclick="event.stopPropagation()">Código</a>
+                            </div>
+                        </div>
+                    </div>
+
                 </div>
             </div>
         </div>
