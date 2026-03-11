@@ -85,6 +85,40 @@ function loadTimeline() {
         });
 }
 
+// Renderizar proyectos destacados
+fetch('data/projects.json')
+    .then(response => response.json())
+    .then(data => {
+        const container = document.getElementById('projects-container');
+        if (!container) return;
+        
+        container.innerHTML = '';
+        
+        data.projects.filter(p => p.featured).forEach(project => {
+            container.innerHTML += `
+                <div class="project-card" onclick="window.location.href='${project.pageFile}'">
+                    <div class="project-badge">${project.badge}</div>
+                    <div class="project-image">
+                        <img src="${project.image}" 
+                             alt="${project.title}" 
+                             style="width: 100%; height: 100%; object-fit: cover;">
+                    </div>
+                    <div class="project-info">
+                        <h3>${project.title}</h3>
+                        <p>${project.description}</p>
+                        <div class="project-tech">
+                            ${project.tags.map(tag => `<span>${tag}</span>`).join('')}
+                        </div>
+                        <div class="project-links">
+                            <a href="${project.pageFile}" class="btn-small">Ver más</a>
+                        </div>
+                    </div>
+                </div>
+            `;
+        });
+    });
+
+
 // ===== RENDERIZAR PROYECTOS =====
 function loadProjects() {
     const container = document.getElementById('projects-container');
