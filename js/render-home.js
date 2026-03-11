@@ -118,57 +118,6 @@ fetch('data/projects.json')
         });
     });
 
-
-// ===== RENDERIZAR PROYECTOS =====
-function loadProjects() {
-    const container = document.getElementById('projects-container');
-    if (!container) {
-        console.error('❌ No se encontró projects-container');
-        return;
-    }
-    
-    fetch('data/projects.json')
-        .then(response => {
-            if (!response.ok) throw new Error('Error cargando proyectos');
-            return response.json();
-        })
-        .then(data => {
-            container.innerHTML = '';
-            
-            data.projects.filter(p => p.featured).forEach(project => {
-                const projectHtml = `
-                    <div class="project-card">
-                        <div class="project-badge">${project.badge}</div>
-                        <div class="project-image">
-                            <div class="project-preview">
-                                <canvas id="${project.canvasId}" width="300" height="200"></canvas>
-                            </div>
-                        </div>
-                        <div class="project-info">
-                            <h3>${project.title}</h3>
-                            <p>${project.description}</p>
-                            <div class="project-tech">
-                                ${project.tags.map(tag => `<span>${tag}</span>`).join('')}
-                            </div>
-                            <div class="project-links">
-                                <a href="pages/proyectos/${project.pageFile}" class="btn-small">Ver más</a>
-                                <a href="${project.codeLink}" target="_blank" class="btn-small">Código</a>
-                            </div>
-                        </div>
-                    </div>
-                `;
-                container.innerHTML += projectHtml;
-            });
-
-            setTimeout(() => {
-                drawPINNPreview();
-                drawCosmologyPreview();
-                drawRubikPreview();
-            }, 100);
-        })
-        .catch(error => console.error('Error cargando proyectos:', error));
-}
-
 // ===== RENDERIZAR "AHORA MISMO" =====
 function loadNow() {
     const container = document.getElementById('now-container');
