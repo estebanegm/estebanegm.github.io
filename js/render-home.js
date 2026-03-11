@@ -45,7 +45,7 @@ function initMobileMenu() {
 function loadTimeline() {
     const container = document.getElementById('timeline-container');
     if (!container) {
-        console.error('❌ No se encontró timeline-container');
+        console.warn('⏱️ Timeline no disponible en esta página');
         return;
     }
     
@@ -77,53 +77,62 @@ function loadTimeline() {
         })
         .catch(error => {
             console.error('Error cargando timeline:', error);
-            container.innerHTML = `
-                <div style="text-align: center; color: #ff6b6b; padding: 2rem;">
-                    Error al cargar la línea de tiempo
-                </div>
-            `;
         });
 }
 
-// Renderizar proyectos destacados
-fetch('data/projects.json')
-    .then(response => response.json())
-    .then(data => {
-        const container = document.getElementById('projects-container');
-        if (!container) return;
-        
-        container.innerHTML = '';
-        
-        data.projects.filter(p => p.featured).forEach(project => {
-            container.innerHTML += `
-                <div class="project-card">
-                    <div class="project-badge">${project.badge}</div>
-                    <div class="project-image">
-                        <img src="${project.image}" 
-                             alt="${project.title}" 
-                             style="width: 100%; height: 100%; object-fit: cover;">
-                    </div>
-                    <div class="project-info">
-                        <h3>${project.title}</h3>
-                        <p>${project.description}</p>
-                        <div class="project-tech">
-                            ${project.tags.map(tag => `<span>${tag}</span>`).join('')}
+// ===== RENDERIZAR PROYECTOS DESTACADOS =====
+function loadProjects() {
+    const container = document.getElementById('projects-container');
+    if (!container) {
+        console.warn('📦 Projects container no disponible en esta página');
+        return;
+    }
+    
+    console.log('📊 Cargando proyectos...');
+    
+    fetch('data/projects.json')
+        .then(response => {
+            if (!response.ok) throw new Error('No se pudo cargar projects.json');
+            return response.json();
+        })
+        .then(data => {
+            container.innerHTML = '';
+            
+            data.projects.filter(p => p.featured).forEach(project => {
+                container.innerHTML += `
+                    <div class="project-card">
+                        <div class="project-badge">${project.badge}</div>
+                        <div class="project-image">
+                            <img src="${project.image}" 
+                                 alt="${project.title}" 
+                                 onerror="this.onerror=null; this.style.display='none'; this.parentNode.innerHTML += '<div style=\'height: 200px; background: linear-gradient(45deg, var(--bg-primary), var(--bg-secondary)); display: flex; align-items: center; justify-content: center;\'><i class=\'fas fa-brain\' style=\'font-size: 3rem; color: var(--accent-primary);\'></i></div>';"
+                                 style="width: 100%; height: 100%; object-fit: cover;">
                         </div>
-                        <div class="project-links">
-                            <a href="${project.pageFile}" class="btn-small">Ver más</a>
-                            <a href="${project.codeLink}" target="_blank" class="btn-small" ${!project.codeLink ? 'style="pointer-events: none; opacity: 0.5;"' : ''}>Código</a>
+                        <div class="project-info">
+                            <h3>${project.title}</h3>
+                            <p>${project.description}</p>
+                            <div class="project-tech">
+                                ${project.tags.map(tag => `<span>${tag}</span>`).join('')}
+                            </div>
+                            <div class="project-links">
+                                <a href="${project.pageFile}" class="btn-small" onclick="event.stopPropagation()">Ver más</a>
+                                <a href="${project.codeLink}" target="_blank" class="btn-small" onclick="event.stopPropagation()" ${!project.codeLink ? 'style="pointer-events: none; opacity: 0.5;"' : ''}>Código</a>
+                            </div>
                         </div>
                     </div>
-                </div>
-            `;
-        });
-    });
+                `;
+            });
+            
+            console.log('✅ Proyectos cargados');
+        })
+        .catch(error => console.error('Error cargando proyectos:', error));
+}
 
 // ===== RENDERIZAR "AHORA MISMO" =====
 function loadNow() {
     const container = document.getElementById('now-container');
     if (!container) {
-        console.error('❌ No se encontró now-container');
+        console.warn('⏰ Now container no disponible en esta página');
         return;
     }
     
@@ -219,25 +228,53 @@ function drawRubikPreview() {
     ctx.fillText('Evolución de tiempos', 20, 30);
 }
 
-// ===== INICIALIZAR TODO =====
-function init() {
-    console.log('Inicializando página...');
+// ===== FUNCIÓN PRINCIPAL QUE SE EJECUTA AL INICIAR =====
+function initPage() {
+    console.log('🎯 Inicializando página...');
+    
+    // Cargar todas las secciones
     loadTimeline();
     loadProjects();
     loadNow();
     
-    // Inicializar menú después de que los componentes estén cargados
+    // Inicializar canvas
+    setTimeout(() => {
+        drawPINNPreview();
+        drawCosmologyPreview();
+        drawRubikPreview();
+    }, 500);
+    
+    // Inicializar menú hamburguesa
     setTimeout(() => {
         initMobileMenu();
     }, 1000);
 }
 
-// Escuchar evento de componentes cargados
-document.addEventListener('componentsLoaded', init);
+// ===== ESCUCHAR EL EVENTO DE COMPONENTES CARGADOS =====
+document.addEventListener('componentsLoaded', function() {
+    console.log('🎯 Evento componentsLoaded recibido - Renderizando contenido...');
+    initPage();
+});
 
-// Si los componentes ya están cargados
-if (document.readyState === 'complete') {
-    init();
-} else {
-    window.addEventListener('load', init);
-}
+// ===== FALLBACK: Si el evento no se dispara, intentar después de un tiempo =====
+setTimeout(function() {
+    console.log('⏰ Timeout - Verificando si es necesario cargar...');
+    // Verificar si hay algún contenedor que necesite ser llenado
+    if (document.getElementById('projects-container') && 
+        document.getElementById('projects-container').children.length === 0) {
+        console.log('⚠️ Forzando carga por timeout');
+        initPage();
+    }
+}, 3000);
+
+// ===== INICIALIZAR TAMBIÉN CON DOMContentLoaded (por si acaso) =====
+document.addEventListener('DOMContentLoaded', function() {
+    // Esperar un poco para ver si el evento componentsLoaded ya se disparó
+    setTimeout(function() {
+        if (document.getElementById('projects-container') && 
+            document.getElementById('projects-container').children.length === 0) {
+            console.log('⚠️ DOMContentLoaded - Forzando carga');
+            initPage();
+        }
+    }, 1000);
+});
