@@ -1,49 +1,16 @@
-// ===== DETECTAR RUTA BASE =====
+// Lista de componentes a cargar (solo header y footer para todas las páginas)
+const components = ['header', 'footer'];
+
+// Función para determinar la ruta base
 function getBasePath() {
-    // Obtener la ruta actual
     const path = window.location.pathname;
-    
-    // Si estamos en la raíz o en una subcarpeta
     if (path.includes('/pages/')) {
-        return '../'; // Estamos en una subcarpeta, subir un nivel
+        return '../'; // Estamos en subcarpeta
     }
     return ''; // Estamos en la raíz
 }
 
-// ===== LISTA DE COMPONENTES POR PÁGINA =====
-// Componentes que siempre se cargan en todas las páginas
-const commonComponents = ['header', 'footer'];
-
-// Componentes específicos para la página principal
-const homeComponents = [
-    'hero',
-    'sobre-mi',
-    'timeline',
-    'proyectos-destacados',
-    'investigacion-preview',
-    'ahora',
-    'blog-preview'
-];
-
-// Determinar qué componentes cargar según la página
-function getComponentsToLoad() {
-    const path = window.location.pathname;
-    
-    // Siempre cargar header y footer
-    let componentsToLoad = [...commonComponents];
-    
-    // Si estamos en la página principal (index.html o raíz)
-    if (path.endsWith('index.html') || path.endsWith('/') || path === '/') {
-        componentsToLoad = [...componentsToLoad, ...homeComponents];
-        console.log('📄 Página principal detectada');
-    } else {
-        console.log('📄 Subpágina detectada');
-    }
-    
-    return componentsToLoad;
-}
-
-// ===== FUNCIÓN PARA CARGAR UN COMPONENTE =====
+// Función para cargar un componente
 async function loadComponent(component) {
     const basePath = getBasePath();
     const componentPath = `${basePath}components/${component}.html`;
@@ -57,7 +24,7 @@ async function loadComponent(component) {
         
         if (element) {
             element.innerHTML = data;
-            console.log(`✅ Componente ${component} cargado desde ${componentPath}`);
+            console.log(`✅ Componente ${component} cargado`);
             
             // Inicializar menú hamburguesa después de cargar header
             if (component === 'header') {
@@ -69,62 +36,34 @@ async function loadComponent(component) {
     }
 }
 
-// ===== FUNCIÓN PARA INICIALIZAR EL MENÚ HAMBURGUESA =====
+// Función para inicializar el menú hamburguesa
 function initMobileMenu() {
     const hamburger = document.querySelector('.hamburger');
     const navMenu = document.querySelector('.nav-menu');
     
-    if (!hamburger || !navMenu) {
-        console.warn('Menú hamburguesa no encontrado');
-        return;
-    }
+    if (!hamburger || !navMenu) return;
     
-    // Remover event listeners anteriores
-    const newHamburger = hamburger.cloneNode(true);
-    hamburger.parentNode.replaceChild(newHamburger, hamburger);
-    const newNavMenu = navMenu.cloneNode(true);
-    navMenu.parentNode.replaceChild(newNavMenu, navMenu);
-    
-    // Agregar nuevo event listener
-    newHamburger.addEventListener('click', function(e) {
+    hamburger.addEventListener('click', function(e) {
         e.stopPropagation();
         this.classList.toggle('active');
-        newNavMenu.classList.toggle('active');
-        document.body.style.overflow = newNavMenu.classList.contains('active') ? 'hidden' : 'auto';
+        navMenu.classList.toggle('active');
+        document.body.style.overflow = navMenu.classList.contains('active') ? 'hidden' : 'auto';
     });
     
-    // Cerrar menú al hacer clic en un enlace
-    newNavMenu.querySelectorAll('a').forEach(link => {
+    navMenu.querySelectorAll('a').forEach(link => {
         link.addEventListener('click', () => {
-            newHamburger.classList.remove('active');
-            newNavMenu.classList.remove('active');
+            hamburger.classList.remove('active');
+            navMenu.classList.remove('active');
             document.body.style.overflow = 'auto';
         });
     });
-    
-    // Cerrar menú al hacer clic fuera
-    document.addEventListener('click', function(e) {
-        if (!newNavMenu.contains(e.target) && !newHamburger.contains(e.target)) {
-            newHamburger.classList.remove('active');
-            newNavMenu.classList.remove('active');
-            document.body.style.overflow = 'auto';
-        }
+}
+
+// Cargar componentes
+Promise.all(components.map(component => loadComponent(component)))
+    .then(() => {
+        console.log('✅ Componentes cargados');
+    })
+    .catch(error => {
+        console.error('Error cargando componentes:', error);
     });
-}
-
-// ===== CARGAR COMPONENTES =====
-async function loadAllComponents() {
-    const componentsToLoad = getComponentsToLoad();
-    console.log('📦 Componentes a cargar:', componentsToLoad);
-    
-    // Cargar componentes en paralelo
-    await Promise.all(componentsToLoad.map(component => loadComponent(component)));
-    
-    console.log('✅ Todos los componentes cargados');
-    
-    // Disparar evento para que otras funciones sepan que ya puede renderizar
-    document.dispatchEvent(new Event('componentsLoaded'));
-}
-
-// ===== INICIAR CARGA =====
-document.addEventListener('DOMContentLoaded', loadAllComponents);
