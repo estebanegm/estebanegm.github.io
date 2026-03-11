@@ -110,7 +110,7 @@ fetch('data/projects.json')
                             ${project.tags.map(tag => `<span>${tag}</span>`).join('')}
                         </div>
                         <div class="project-links">
-                            <a href="pages/proyectos/${project.pageFile}" class="btn-small">Ver más</a>
+                            <a href="${project.pageFile}" class="btn-small">Ver más</a>
                             <a href="${project.codeLink}" target="_blank" class="btn-small" ${!project.codeLink ? 'style="pointer-events: none; opacity: 0.5;"' : ''}>Código</a>
                         </div>
                     </div>
